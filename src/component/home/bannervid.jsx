@@ -1,0 +1,67 @@
+import React from 'react';
+import { ChevronDown } from 'lucide-react';
+
+export default function VideoBanner() {
+  return (
+    <section className="relative w-full h-[85vh] min-h-[550px] flex items-center justify-center overflow-hidden bg-black">
+      {/* Background Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105"
+      >
+        {/* Replace with your luxury jewelry video source link */}
+        <source 
+          src="https://assets.mixkit.co/videos/preview/mixkit-hands-wearing-gold-bracelets-and-rings-43285-large.mp4" 
+          type="video/mp4" 
+        />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Cinematic Gradient / Dark Overlay for readability */}
+      <div className="absolute inset-0 bg-black/40 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
+
+      {/* Content Container */}
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center justify-end h-full pb-16">
+        
+        {/* Subtitle with high-end tracking */}
+        <p className="text-[#EAE6DF] text-[10px] md:text-xs font-medium tracking-[0.3em] uppercase mb-3 drop-shadow-md">
+          WATERPROOF ESSENTIALS
+        </p>
+
+        {/* Main Headline matching reference */}
+        <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-serif font-light tracking-[0.2em] uppercase mb-6 drop-shadow-lg">
+          WEAR IT EVERYWHERE
+        </h1>
+
+        {/* Dual Action Links */}
+        <div className="flex items-center space-x-8 text-xs md:text-sm tracking-[0.2em] font-medium uppercase text-white">
+          <a 
+            href="#shop-earrings" 
+            className="relative pb-1 group hover:text-[#D4AF37] transition-colors"
+          >
+            Shop Earrings
+            <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          
+          <span className="text-white/40">•</span>
+
+          <a 
+            href="#latest-drops" 
+            className="relative pb-1 group hover:text-[#D4AF37] transition-colors"
+          >
+            Latest Drops
+            <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#D4AF37] transition-all duration-300 group-hover:w-full"></span>
+          </a>
+        </div>
+      </div>
+
+      {/* Subtle Scroll Down Indicator at the absolute bottom */}
+      <div className="absolute bottom-6 z-10 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer">
+        <ChevronDown size={20} className="text-white/80" />
+      </div>
+    </section>
+  );
+}

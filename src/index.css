@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Import a high-end luxury serif font for jewelry headings */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  background: #FCFCFB;
+  color: #1A1A1A;
+}
+
+/* Custom utility override to ensure serif font class works cleanly */
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
