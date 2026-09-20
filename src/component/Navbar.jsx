@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 import { Search, User, ShoppingBag, Menu, X, ChevronRight, Trash2 } from 'lucide-react';
 
+// `to` is the route for the item; items without one are not built yet and stay as "#"
 const NAV_ITEMS = [
-  { label: 'NEW ARRIVALS', hasDropdown: true },
-  { label: 'RINGS', hasDropdown: false },
-  { label: 'NECKLACES', hasDropdown: false },
-  { label: 'EARRINGS', hasDropdown: false },
-  { label: 'BRACELETS', hasDropdown: false },
-  { label: 'FINE JEWELLERY', hasDropdown: true, highlight: true },
-  { label: 'BRIDAL', hasDropdown: false },
-  { label: 'GIFTS', hasDropdown: false },
+  { label: 'NEW ARRIVALS', to: '/new-arrivals', hasDropdown: true },
+  { label: 'RINGS', to: '/rings', hasDropdown: false },
+  { label: 'NECKLACES', to: '/necklaces', hasDropdown: false },
+  { label: 'EARRINGS', to: '/earrings', hasDropdown: false },
+  { label: 'BRACELETS', to: '/bracelets', hasDropdown: false },
+  { label: 'FINE JEWELLERY', to: '/fine-jewellery', hasDropdown: true, highlight: true },
+  { label: 'BRIDAL', to: '/bridal', hasDropdown: false },
+  { label: 'GIFTS', to: '/gifts', hasDropdown: false },
 ];
 
 export default function Navbar() {
@@ -60,26 +62,31 @@ export default function Navbar() {
             <Menu size={24} />
           </button>
 
-          <a href="#" className="focus:outline-none">
+          <Link to="/" className="focus:outline-none">
             <span className="text-2xl font-serif font-bold tracking-widest text-black">
               AURELIA
             </span>
-          </a>
+          </Link>
         </div>
 
         {/* Center: Desktop Nav Links */}
         <nav className="hidden lg:flex items-center space-x-6">
-          {NAV_ITEMS.map((item, index) => (
-            <a 
-              key={index} 
-              href="#"
-              className={`text-xs font-semibold tracking-wider pb-1 border-b-2 border-transparent hover:border-black transition-colors ${
-                item.highlight ? 'text-amber-700' : 'text-gray-900'
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
+          {NAV_ITEMS.map((item, index) => {
+            const className = ({ isActive } = {}) =>
+              `text-xs font-semibold tracking-wider pb-1 border-b-2 hover:border-black transition-colors ${
+                isActive ? 'border-[#D4AF37]' : 'border-transparent'
+              } ${item.highlight ? 'text-amber-700' : 'text-gray-900'}`;
+
+            return item.to ? (
+              <NavLink key={index} to={item.to} className={className}>
+                {item.label}
+              </NavLink>
+            ) : (
+              <a key={index} href="#" className={className()}>
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Right: Icons */}
@@ -136,18 +143,32 @@ export default function Navbar() {
                 </button>
               </div>
               <div className="flex flex-col space-y-4">
-                {NAV_ITEMS.map((item, idx) => (
-                  <a 
-                    key={idx} 
-                    href="#" 
-                    className={`text-sm font-semibold tracking-wide flex justify-between items-center py-2 border-b border-gray-100 ${
-                      item.highlight ? 'text-amber-700' : 'text-gray-900'
-                    }`}
-                  >
-                    {item.label}
-                    {item.hasDropdown && <ChevronRight size={16} className="text-gray-400" />}
-                  </a>
-                ))}
+                {NAV_ITEMS.map((item, idx) => {
+                  const className = `text-sm font-semibold tracking-wide flex justify-between items-center py-2 border-b border-gray-100 ${
+                    item.highlight ? 'text-amber-700' : 'text-gray-900'
+                  }`;
+                  const content = (
+                    <>
+                      {item.label}
+                      {item.hasDropdown && <ChevronRight size={16} className="text-gray-400" />}
+                    </>
+                  );
+
+                  return item.to ? (
+                    <Link
+                      key={idx}
+                      to={item.to}
+                      className={className}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {content}
+                    </Link>
+                  ) : (
+                    <a key={idx} href="#" className={className}>
+                      {content}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>
