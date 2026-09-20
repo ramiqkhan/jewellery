@@ -64,7 +64,7 @@ export default function Navbar() {
 
           <Link to="/" className="focus:outline-none">
             <span className="text-2xl font-serif font-bold tracking-widest text-black">
-              AURELIA
+              ZELORA
             </span>
           </Link>
         </div>

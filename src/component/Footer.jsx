@@ -13,7 +13,7 @@ export default function Footer() {
               Private Client Services
             </p>
             <h3 className="text-2xl md:text-3xl font-serif font-light tracking-[0.15em] text-white uppercase">
-              Join the Aurelia Inner Circle
+              Join the Zelora Inner Circle
             </h3>
             <p className="text-gray-400 text-xs tracking-wide mt-2 max-w-md font-serif">
               Subscribe to receive private invitations to seasonal showcases, bespoke collection releases, and complimentary care guides.
@@ -39,7 +39,7 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-1">
             <h2 className="text-2xl font-serif font-bold tracking-[0.3em] text-white mb-6">
-              AURELIA
+              ZELORA
             </h2>
             <p className="text-gray-400 text-xs tracking-wide leading-relaxed mb-6 font-serif">
               Handcrafted fine jewellery created for everlasting moments and generations of elegance.
@@ -108,11 +108,11 @@ export default function Footer() {
             <ul className="space-y-3 text-xs tracking-wider text-gray-400 font-serif">
               <li className="flex items-center space-x-2.5">
                 <Phone size={14} className="text-[#D4AF37]" />
-                <span>+1 (800) 555-AURELIA</span>
+                <span>+1 (800) 555-ZELORA</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Mail size={14} className="text-[#D4AF37]" />
-                <span>concierge@aurelia.com</span>
+                <span>concierge@zelora.com</span>
               </li>
               <li className="flex items-start space-x-2.5">
                 <MapPin size={14} className="text-[#D4AF37] mt-0.5" />
@@ -125,7 +125,7 @@ export default function Footer() {
 
         {/* Bottom Copyright & Legal Bar */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] tracking-[0.2em] uppercase text-gray-500 font-medium">
-          <p>© 2026 AURELIA FINE JEWELLERY. ALL RIGHTS RESERVED.</p>
+          <p>© 2026 ZELORA FINE JEWELLERY. ALL RIGHTS RESERVED.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
