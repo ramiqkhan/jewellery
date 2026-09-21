@@ -15,7 +15,7 @@ const PRODUCTS = [
     name: 'Classic Diamond Tennis Bracelet in White Gold',
     category: 'Tennis',
     metal: '18K White Gold',
-    price: 3400,
+    price: 340000,
     tag: 'New',
     image: IMAGES.bracelet,
   },
@@ -24,7 +24,7 @@ const PRODUCTS = [
     name: 'Gold Link Chain Bracelet',
     category: 'Chain',
     metal: '18K Yellow Gold',
-    price: 960,
+    price: 96000,
     image: IMAGES.bracelet,
   },
   {
@@ -32,7 +32,7 @@ const PRODUCTS = [
     name: 'Polished Gold Bangle',
     category: 'Bangles',
     metal: '18K Yellow Gold',
-    price: 1380,
+    price: 138000,
     tag: 'Bestseller',
     image: IMAGES.bracelet,
   },
@@ -41,7 +41,7 @@ const PRODUCTS = [
     name: 'Rose Gold Diamond Tennis Bracelet',
     category: 'Tennis',
     metal: '18K Rose Gold',
-    price: 2900,
+    price: 290000,
     image: IMAGES.bracelet,
   },
   {
@@ -49,7 +49,7 @@ const PRODUCTS = [
     name: 'Hinged Diamond Cuff Bangle',
     category: 'Bangles',
     metal: '18K White Gold',
-    price: 4200,
+    price: 420000,
     tag: 'Exclusive',
     image: IMAGES.bracelet,
   },
@@ -58,7 +58,7 @@ const PRODUCTS = [
     name: 'Curb Chain Bracelet',
     category: 'Chain',
     metal: 'Sterling Silver',
-    price: 420,
+    price: 42000,
     image: IMAGES.bracelet,
   },
 ];
@@ -71,8 +71,7 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function Bracelets() {
   const [activeCategory, setActiveCategory] = useState('All');

@@ -15,7 +15,7 @@ const PRODUCTS = [
     name: 'Akoya Cultured Pearl Drop Earrings',
     category: 'Drops',
     metal: '18K Yellow Gold',
-    price: 780,
+    price: 78000,
     tag: 'Exclusive',
     image: IMAGES.earrings,
   },
@@ -24,7 +24,7 @@ const PRODUCTS = [
     name: 'Diamond Studded Hoop Earrings',
     category: 'Hoops',
     metal: '18K Rose Gold',
-    price: 1120,
+    price: 112000,
     tag: 'New',
     image: IMAGES.earrings,
   },
@@ -33,7 +33,7 @@ const PRODUCTS = [
     name: 'Round Brilliant Diamond Studs',
     category: 'Studs',
     metal: 'Platinum',
-    price: 2600,
+    price: 260000,
     tag: 'Bestseller',
     image: IMAGES.earrings,
   },
@@ -42,7 +42,7 @@ const PRODUCTS = [
     name: 'Classic Gold Huggie Hoops',
     category: 'Hoops',
     metal: '18K Yellow Gold',
-    price: 540,
+    price: 54000,
     image: IMAGES.earrings,
   },
   {
@@ -50,7 +50,7 @@ const PRODUCTS = [
     name: 'Sapphire Halo Drop Earrings',
     category: 'Drops',
     metal: '18K White Gold',
-    price: 3100,
+    price: 310000,
     image: IMAGES.earrings,
   },
   {
@@ -58,7 +58,7 @@ const PRODUCTS = [
     name: 'Pearl Stud Earrings',
     category: 'Studs',
     metal: '14K Yellow Gold',
-    price: 360,
+    price: 36000,
     image: IMAGES.earrings,
   },
 ];
@@ -71,8 +71,7 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function Earrings() {
   const [activeCategory, setActiveCategory] = useState('All');

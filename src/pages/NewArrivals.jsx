@@ -12,7 +12,7 @@ const ARRIVALS = [
     name: 'Classic Diamond Tennis Bracelet in White Gold',
     category: 'Bracelets',
     metal: '18K White Gold',
-    price: 3400,
+    price: 340000,
     added: '2026-09-18',
     image: img('1611591471171-a1314efea44d'),
   },
@@ -21,7 +21,7 @@ const ARRIVALS = [
     name: 'Pavé Diamond Eternity Band',
     category: 'Rings',
     metal: '18K White Gold',
-    price: 2150,
+    price: 215000,
     added: '2026-09-16',
     image: img('1605100804763-247f67b3557e'),
   },
@@ -30,7 +30,7 @@ const ARRIVALS = [
     name: 'Akoya Cultured Pearl Drop Earrings',
     category: 'Earrings',
     metal: '18K Yellow Gold',
-    price: 780,
+    price: 78000,
     added: '2026-09-14',
     image: img('1630019852942-f89202989a59'),
   },
@@ -39,7 +39,7 @@ const ARRIVALS = [
     name: 'Interlocking Gold Chain Necklace',
     category: 'Necklaces',
     metal: '18K Yellow Gold',
-    price: 1450,
+    price: 145000,
     added: '2026-09-10',
     image: img('1599643477877-530eb83abc8e'),
   },
@@ -48,7 +48,7 @@ const ARRIVALS = [
     name: 'Three-Stone Diamond Anniversary Ring',
     category: 'Rings',
     metal: 'Platinum',
-    price: 5200,
+    price: 520000,
     added: '2026-09-07',
     image: img('1603561591411-07134e71a2a9'),
   },
@@ -57,7 +57,7 @@ const ARRIVALS = [
     name: 'Diamond Studded Hoop Earrings',
     category: 'Earrings',
     metal: '18K Rose Gold',
-    price: 1120,
+    price: 112000,
     added: '2026-09-03',
     image: img('1630019852942-f89202989a59'),
   },
@@ -66,7 +66,7 @@ const ARRIVALS = [
     name: 'Solitaire Diamond Pendant Necklace',
     category: 'Necklaces',
     metal: '18K White Gold',
-    price: 1890,
+    price: 189000,
     added: '2026-08-28',
     image: img('1599643477877-530eb83abc8e'),
   },
@@ -75,7 +75,7 @@ const ARRIVALS = [
     name: 'Gold Link Chain Bracelet',
     category: 'Bracelets',
     metal: '18K Yellow Gold',
-    price: 960,
+    price: 96000,
     added: '2026-08-24',
     image: img('1611591471171-a1314efea44d'),
   },
@@ -97,8 +97,7 @@ const JUST_IN_IDS = new Set(
     .map((item) => item.id)
 );
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 const formatAdded = (iso) =>
   new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

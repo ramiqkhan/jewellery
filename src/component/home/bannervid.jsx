@@ -1,14 +1,75 @@
-import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ChevronDown, Volume2, VolumeX } from 'lucide-react';
+
+const UNLOCK_EVENTS = ['pointerdown', 'keydown', 'touchstart'];
 
 export default function VideoBanner() {
+  const videoRef = useRef(null);
+  // Sound is on from the start
+  const [isMuted, setIsMuted] = useState(false);
+
+  // Browsers may block autoplay with sound until the visitor interacts with the page.
+  // If that happens, fall back to muted playback and turn the sound on at the first
+  // click / key press / tap.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+
+    let cancelled = false;
+    let unlock = null;
+
+    const removeUnlock = () => {
+      if (!unlock) return;
+      UNLOCK_EVENTS.forEach((event) => window.removeEventListener(event, unlock));
+      unlock = null;
+    };
+
+    video.muted = false;
+    video.play().catch(() => {
+      if (cancelled) return;
+
+      // Blocked: play silently for now
+      video.muted = true;
+      setIsMuted(true);
+      video.play().catch(() => {});
+
+      unlock = () => {
+        removeUnlock();
+        video.muted = false;
+        setIsMuted(false);
+        video.play().catch(() => {});
+      };
+      UNLOCK_EVENTS.forEach((event) => window.addEventListener(event, unlock, { once: true }));
+    });
+
+    return () => {
+      cancelled = true;
+      removeUnlock();
+    };
+  }, []);
+
+  const toggleSound = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const nextMuted = !isMuted;
+    video.muted = nextMuted;
+    setIsMuted(nextMuted);
+
+    // Make sure playback continues after unmuting
+    if (!nextMuted && video.paused) {
+      video.play().catch(() => {});
+    }
+  };
+
   return (
     <section className="relative w-full h-[85vh] min-h-[550px] flex items-center justify-center overflow-hidden bg-black">
       {/* Background Video */}
       <video
+        ref={videoRef}
         autoPlay
         loop
-        muted 
+        muted={isMuted}
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105"
       >
@@ -54,6 +115,18 @@ export default function VideoBanner() {
           </a>
         </div>
       </div>
+
+      {/* Sound Toggle */}
+      <button
+        type="button"
+        onClick={toggleSound}
+        aria-label={isMuted ? 'Turn video sound on' : 'Turn video sound off'}
+        aria-pressed={!isMuted}
+        className="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-sm border border-white/30 text-white px-3 py-2 text-[10px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-black transition-colors"
+      >
+        {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        <span className="hidden sm:inline">{isMuted ? 'Sound Off' : 'Sound On'}</span>
+      </button>
 
       {/* Subtle Scroll Down Indicator at the absolute bottom */}
       <div className="absolute bottom-6 z-10 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer">

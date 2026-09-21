@@ -5,28 +5,28 @@ const BEST_SELLERS = [
   {
     id: 1,
     name: '18K Yellow Gold Diamond Solitaire Ring',
-    price: '$1,250.00',
+    price: 'PKR 185,000',
     image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&q=80&w=600',
     tag: 'Bestseller'
   },
   {
     id: 2,
     name: 'Classic Diamond Tennis Bracelet in White Gold',
-    price: '$3,400.00',
+    price: 'PKR 340,000',
     image: 'https://images.unsplash.com/photo-1611591471171-a1314efea44d?auto=format&fit=crop&q=80&w=600',
     tag: 'New'
   },
   {
     id: 3,
     name: 'Akoya Cultured Pearl Drop Earrings',
-    price: '$780.00',
+    price: 'PKR 78,000',
     image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&q=80&w=600',
     tag: 'Exclusive'
   },
   {
     id: 4,
     name: 'Interlocking Gold Chain Necklace',
-    price: '$1,450.00',
+    price: 'PKR 145,000',
     image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=600',
     tag: 'Limited'
   }

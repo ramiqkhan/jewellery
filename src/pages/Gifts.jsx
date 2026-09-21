@@ -15,51 +15,51 @@ const PRODUCTS = [
   {
     id: 1,
     name: 'Heart Locket Pendant',
-    category: 'Under $1,000',
+    category: 'Under PKR 100,000',
     metal: '14K Yellow Gold',
-    price: 640,
+    price: 64000,
     tag: 'Bestseller',
     image: IMAGES.necklace,
   },
   {
     id: 2,
     name: 'Pearl Stud Earrings',
-    category: 'Under $1,000',
+    category: 'Under PKR 100,000',
     metal: '14K Yellow Gold',
-    price: 360,
+    price: 36000,
     image: IMAGES.earrings,
   },
   {
     id: 3,
     name: 'Curb Chain Bracelet',
-    category: 'Under $1,000',
+    category: 'Under PKR 100,000',
     metal: 'Sterling Silver',
-    price: 420,
+    price: 42000,
     image: IMAGES.bracelet,
   },
   {
     id: 4,
     name: 'Diamond Studded Hoop Earrings',
-    category: '$1,000 and over',
+    category: 'PKR 100,000 and over',
     metal: '18K Rose Gold',
-    price: 1120,
+    price: 112000,
     tag: 'New',
     image: IMAGES.earrings,
   },
   {
     id: 5,
     name: 'Solitaire Diamond Pendant Necklace',
-    category: '$1,000 and over',
+    category: 'PKR 100,000 and over',
     metal: '18K White Gold',
-    price: 1890,
+    price: 189000,
     image: IMAGES.necklace,
   },
   {
     id: 6,
     name: 'Polished Gold Bangle',
-    category: '$1,000 and over',
+    category: 'PKR 100,000 and over',
     metal: '18K Yellow Gold',
-    price: 1380,
+    price: 138000,
     tag: 'Limited',
     image: IMAGES.bracelet,
   },
@@ -73,8 +73,7 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function Gifts() {
   const [activeCategory, setActiveCategory] = useState('All');

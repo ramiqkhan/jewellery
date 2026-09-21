@@ -19,7 +19,7 @@ const PRODUCTS = [
     name: 'Platinum Round Brilliant Engagement Ring',
     category: 'Diamonds',
     metal: 'Platinum',
-    price: 4800,
+    price: 480000,
     tag: 'Exclusive',
     image: IMAGES.ringAlt,
   },
@@ -28,7 +28,7 @@ const PRODUCTS = [
     name: 'Diamond Rivière Necklace',
     category: 'Diamonds',
     metal: '18K White Gold',
-    price: 12500,
+    price: 1250000,
     tag: 'Limited',
     image: IMAGES.necklace,
   },
@@ -37,7 +37,7 @@ const PRODUCTS = [
     name: 'Art Deco Sapphire Cocktail Ring',
     category: 'Gemstones',
     metal: '18K Yellow Gold',
-    price: 3200,
+    price: 320000,
     image: IMAGES.ring,
   },
   {
@@ -45,7 +45,7 @@ const PRODUCTS = [
     name: 'Emerald and Diamond Drop Earrings',
     category: 'Gemstones',
     metal: 'Platinum',
-    price: 8900,
+    price: 890000,
     tag: 'Limited',
     image: IMAGES.earrings,
   },
@@ -54,7 +54,7 @@ const PRODUCTS = [
     name: 'Hinged Diamond Cuff Bangle',
     category: 'Diamonds',
     metal: '18K White Gold',
-    price: 4200,
+    price: 420000,
     image: IMAGES.bracelet,
   },
   {
@@ -62,7 +62,7 @@ const PRODUCTS = [
     name: 'Ruby Halo Pendant',
     category: 'Gemstones',
     metal: '18K Rose Gold',
-    price: 5400,
+    price: 540000,
     tag: 'Exclusive',
     image: IMAGES.necklace,
   },
@@ -76,8 +76,7 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function FineJewellery() {
   const [activeCategory, setActiveCategory] = useState('All');

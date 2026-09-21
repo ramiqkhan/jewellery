@@ -16,7 +16,7 @@ const PRODUCTS = [
     name: 'Interlocking Gold Chain Necklace',
     category: 'Chains',
     metal: '18K Yellow Gold',
-    price: 1450,
+    price: 145000,
     tag: 'Limited',
     image: IMAGES.necklace,
   },
@@ -25,7 +25,7 @@ const PRODUCTS = [
     name: 'Solitaire Diamond Pendant Necklace',
     category: 'Pendants',
     metal: '18K White Gold',
-    price: 1890,
+    price: 189000,
     tag: 'Bestseller',
     image: IMAGES.necklace,
   },
@@ -34,7 +34,7 @@ const PRODUCTS = [
     name: 'Akoya Pearl Strand Necklace',
     category: 'Pearls',
     metal: '18K Yellow Gold',
-    price: 2350,
+    price: 235000,
     image: IMAGES.necklace,
   },
   {
@@ -42,7 +42,7 @@ const PRODUCTS = [
     name: 'Paperclip Link Chain',
     category: 'Chains',
     metal: '18K Rose Gold',
-    price: 920,
+    price: 92000,
     image: IMAGES.necklace,
   },
   {
@@ -50,7 +50,7 @@ const PRODUCTS = [
     name: 'Heart Locket Pendant',
     category: 'Pendants',
     metal: '14K Yellow Gold',
-    price: 640,
+    price: 64000,
     tag: 'New',
     image: IMAGES.necklace,
   },
@@ -59,7 +59,7 @@ const PRODUCTS = [
     name: 'Freshwater Pearl Choker',
     category: 'Pearls',
     metal: 'Sterling Silver',
-    price: 480,
+    price: 48000,
     image: IMAGES.necklace,
   },
 ];
@@ -72,8 +72,7 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function Necklaces() {
   const [activeCategory, setActiveCategory] = useState('All');
