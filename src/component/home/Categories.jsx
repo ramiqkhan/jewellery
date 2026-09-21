@@ -1,23 +1,28 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const FEATURED_COLLECTIONS = [
   {
     title: 'SHOP COLLECTION',
+    to: '/shop',
     // subtitle: 'Timeless Masterpieces',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP NEW RELEASES',
+    to: '/new-arrivals',
     // subtitle: 'Latest Arrivals',
     image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP 80S COLLECTION',
+    to: '/80s-collection',
     // subtitle: 'Vintage Inspired',
     image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP BRIDAL SETS',
+    to: '/bridal',
     // subtitle: 'For Everlasting Moments',
     image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&q=80&w=900',
   },
@@ -39,10 +44,11 @@ export default function Categories() {
 
       {/* Full-Width 4 Column Edge-to-Edge Grid */}
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[1px] bg-[#222222]">
-        {FEATURED_COLLECTIONS.map((item, index) => (
-          <div 
-            key={index} 
-            className="group relative w-full h-[60vh] md:h-[65vh] overflow-hidden cursor-pointer bg-[#0A0A0A]"
+        {FEATURED_COLLECTIONS.map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="group relative block w-full h-[60vh] md:h-[65vh] overflow-hidden bg-[#0A0A0A]"
           >
             {/* Background Image with Cinematic Zoom */}
             <img 
@@ -67,7 +73,7 @@ export default function Categories() {
                 {item.title}
               </h3>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

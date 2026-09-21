@@ -11,7 +11,8 @@ const NAV_ITEMS = [
   { label: 'EARRINGS', to: '/earrings', hasDropdown: false },
   { label: 'BRACELETS', to: '/bracelets', hasDropdown: false },
   { label: 'FINE JEWELLERY', to: '/fine-jewellery', hasDropdown: true, highlight: true },
-  // { label: 'BRIDAL', to: '/bridal', hasDropdown: false },
+  { label: 'BRIDAL', to: '/bridal', hasDropdown: false },
+  { label: '80S COLLECTION', to: '/80s-collection', hasDropdown: false },
   { label: 'GIFTS', to: '/gifts', hasDropdown: false },
 ];
 
@@ -37,7 +38,7 @@ export default function Navbar() {
         {/* Left: Mobile Menu Trigger & Logo */}
         <div className="flex items-center space-x-4">
           <button
-            className="md:hidden p-1 text-black focus:outline-none"
+            className="xl:hidden p-1 text-black focus:outline-none"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open Mobile Menu"
           >
@@ -52,7 +53,7 @@ export default function Navbar() {
         </div>
 
         {/* Center: Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center space-x-6">
+        <nav className="hidden xl:flex items-center space-x-6">
           {NAV_ITEMS.map((item, index) => {
             const className = ({ isActive } = {}) =>
               `text-xs font-semibold tracking-wider pb-1 border-b-2 hover:border-black transition-colors ${

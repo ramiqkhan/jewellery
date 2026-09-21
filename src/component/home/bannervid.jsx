@@ -12,11 +12,8 @@ export default function VideoBanner() {
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105"
       >
-        {/* Replace with your luxury jewelry video source link */}
-        <source 
-          src="https://assets.mixkit.co/videos/preview/mixkit-hands-wearing-gold-bracelets-and-rings-43285-large.mp4" 
-          type="video/mp4" 
-        />
+        {/* Local video served from /public/vid.mp4 */}
+        <source src="/vid.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

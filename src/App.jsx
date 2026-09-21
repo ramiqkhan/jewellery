@@ -13,7 +13,8 @@ import Necklaces from './pages/Necklaces';
 import Earrings from './pages/Earrings';
 import Bracelets from './pages/Bracelets';
 import FineJewellery from './pages/FineJewellery';
-// import Bridal from './pages/Bridal';
+import Bridal from './pages/Bridal';
+import Eighties from './pages/Eighties';
 import Gifts from './pages/Gifts';
 import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout'; // Checkout Page Import
@@ -59,7 +60,8 @@ export default function App() {
             <Route path="/earrings" element={<Earrings />} />
             <Route path="/bracelets" element={<Bracelets />} />
             <Route path="/fine-jewellery" element={<FineJewellery />} />
-            {/* <Route path="/bridal" element={<Bridal />} /> */}
+            <Route path="/bridal" element={<Bridal />} />
+            <Route path="/80s-collection" element={<Eighties />} />
             <Route path="/gifts" element={<Gifts />} />
             
             {/* Dynamic Product Page Route */}
