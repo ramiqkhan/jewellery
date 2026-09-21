@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock, ArrowLeft, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../Context/CartContext';
 
 export default function Checkout() {
   const navigate = useNavigate();

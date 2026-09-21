@@ -11,7 +11,7 @@ import {
   Plus, 
   Sparkles 
 } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../Context/CartContext';
 
 // Sample product database matching route IDs
 const PRODUCTS_DATA = [

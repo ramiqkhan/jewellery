@@ -21,7 +21,7 @@ import Checkout from './pages/Checkout'; // Checkout Page Import
 import ContactUs from './pages/ContactUs'; // Contact Us Page Import
 
 // Context Import
-import { CartProvider } from './context/CartContext';
+import { CartProvider } from './Context/CartContext';
 
 // Scroll to top on route change
 function ScrollToTop() {

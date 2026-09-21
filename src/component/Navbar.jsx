@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Search, User, ShoppingBag, Menu, X, ChevronRight } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../Context/CartContext';
 
 // `to` is the route for the item; items without one are not built yet and stay as "#"
 const NAV_ITEMS = [
