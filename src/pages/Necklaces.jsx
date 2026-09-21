@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=700`;
 
@@ -11,7 +12,7 @@ const IMAGES = {
 
 const PRODUCTS = [
   {
-    id: 1,
+    id: 'zelora-necklace-01',
     name: 'Interlocking Gold Chain Necklace',
     category: 'Chains',
     metal: '18K Yellow Gold',
@@ -20,7 +21,7 @@ const PRODUCTS = [
     image: IMAGES.necklace,
   },
   {
-    id: 2,
+    id: 'zelora-necklace-02',
     name: 'Solitaire Diamond Pendant Necklace',
     category: 'Pendants',
     metal: '18K White Gold',
@@ -29,7 +30,7 @@ const PRODUCTS = [
     image: IMAGES.necklace,
   },
   {
-    id: 3,
+    id: 'zelora-necklace-03',
     name: 'Akoya Pearl Strand Necklace',
     category: 'Pearls',
     metal: '18K Yellow Gold',
@@ -37,7 +38,7 @@ const PRODUCTS = [
     image: IMAGES.necklace,
   },
   {
-    id: 4,
+    id: 'zelora-necklace-04',
     name: 'Paperclip Link Chain',
     category: 'Chains',
     metal: '18K Rose Gold',
@@ -45,7 +46,7 @@ const PRODUCTS = [
     image: IMAGES.necklace,
   },
   {
-    id: 5,
+    id: 'zelora-necklace-05',
     name: 'Heart Locket Pendant',
     category: 'Pendants',
     metal: '14K Yellow Gold',
@@ -54,7 +55,7 @@ const PRODUCTS = [
     image: IMAGES.necklace,
   },
   {
-    id: 6,
+    id: 'zelora-necklace-06',
     name: 'Freshwater Pearl Choker',
     category: 'Pearls',
     metal: 'Sterling Silver',
@@ -78,6 +79,7 @@ export default function Necklaces() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState({});
+  const { addToCart, setIsCartOpen } = useCart();
 
   const visibleProducts = useMemo(() => {
     const filtered =
@@ -90,12 +92,33 @@ export default function Necklaces() {
     return filtered;
   }, [activeCategory, sortBy]);
 
-  const toggleWishlist = (id) => {
+  const toggleWishlist = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleQuickAdd = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (addToCart) {
+      addToCart({
+        id: product.id,
+        productId: product.id,
+        title: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      });
+      if (typeof setIsCartOpen === 'function') {
+        setIsCartOpen(true);
+      }
+    }
+  };
+
   return (
-    <main className="bg-[#FCFCFB] text-[#1A1A1A]">
+    <main className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
       {/* Page Header */}
       <section className="bg-[#111111] text-white px-6 py-16 md:py-24 text-center">
         <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
@@ -110,7 +133,7 @@ export default function Necklaces() {
           Necklaces
         </h1>
         <div className="w-10 h-px bg-[#D4AF37] mx-auto mt-4 mb-5" />
-        <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed font-serif">
+        <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed font-serif">
           Pendants, chains and pearl strands designed to be layered, gifted and worn for a lifetime.
         </p>
       </section>
@@ -168,8 +191,8 @@ export default function Necklaces() {
                 )}
 
                 <button
-                  onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-xs rounded-full hover:text-black z-10 transition-colors shadow-sm"
+                  onClick={(e) => toggleWishlist(e, product.id)}
+                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:text-black z-10 transition-colors shadow-sm"
                   aria-label={wishlist[product.id] ? 'Remove from wishlist' : 'Save to wishlist'}
                   aria-pressed={!!wishlist[product.id]}
                 >
@@ -179,20 +202,36 @@ export default function Necklaces() {
                   />
                 </button>
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+                {/* Clickable Card Link to Product Detail Page */}
+                <Link to={`/product/${product.id}`} className="block w-full h-full">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </Link>
+
+                {/* Quick Add Overlay Button */}
+                <button
+                  onClick={(e) => handleQuickAdd(e, product)}
+                  className="absolute bottom-0 inset-x-0 bg-black/90 text-white text-[10px] uppercase font-bold tracking-[0.2em] py-3 flex items-center justify-center gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10 hover:bg-[#D4AF37]"
+                >
+                  <ShoppingBag size={14} />
+                  <span>Quick Add</span>
+                </button>
               </div>
 
               <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
                 {product.metal}
               </p>
-              <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
-                {product.name}
-              </h2>
+              
+              <Link to={`/product/${product.id}`}>
+                <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
+                  {product.name}
+                </h2>
+              </Link>
+
               <p className="text-xs font-semibold tracking-wide mt-2">{formatPrice(product.price)}</p>
             </article>
           ))}

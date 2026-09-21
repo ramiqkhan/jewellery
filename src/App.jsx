@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
+// Component & Page Imports
 import Navbar from './component/Navbar';
+import CartDrawer from './component/CartDrawer';
+import Footer from './component/Footer';
+
 import Home from './pages/home';
 import Rings from './pages/Rings';
 import NewArrivals from './pages/NewArrivals';
@@ -8,11 +13,16 @@ import Necklaces from './pages/Necklaces';
 import Earrings from './pages/Earrings';
 import Bracelets from './pages/Bracelets';
 import FineJewellery from './pages/FineJewellery';
-import Bridal from './pages/Bridal';
+// import Bridal from './pages/Bridal';
 import Gifts from './pages/Gifts';
-import Footer from './component/Footer';
+import ProductDetail from './pages/ProductDetail';
+import Checkout from './pages/Checkout'; // Checkout Page Import
+import ContactUs from './pages/ContactUs'; // Contact Us Page Import
 
-// Start every page at the top when the route changes
+// Context Import
+import { CartProvider } from './context/CartContext';
+
+// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -21,7 +31,7 @@ function ScrollToTop() {
   return null;
 }
 
-// Simple placeholder for another page (e.g. Shop or Rings)
+// Placeholder Shop Page
 function ShopPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
@@ -33,35 +43,37 @@ function ShopPage() {
 
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <div className="min-h-screen bg-[#FCFCFB] text-[#1A1A1A]">
-        {/* Global Navigation Header Appears on All Pages */}
-        <Navbar />
+    <CartProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="min-h-screen bg-[#FCFCFB] text-[#1A1A1A]">
+          <Navbar />
+          <CartDrawer />
 
-        {/* Route Controller */}
-        <Routes>
-          {/* Home Route - Renders your Home page with the Video Banner & Sections */}
-          <Route path="/" element={<Home />} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<ShopPage />} />
+            <Route path="/rings" element={<Rings />} />
+            <Route path="/new-arrivals" element={<NewArrivals />} />
+            <Route path="/necklaces" element={<Necklaces />} />
+            <Route path="/earrings" element={<Earrings />} />
+            <Route path="/bracelets" element={<Bracelets />} />
+            <Route path="/fine-jewellery" element={<FineJewellery />} />
+            {/* <Route path="/bridal" element={<Bridal />} /> */}
+            <Route path="/gifts" element={<Gifts />} />
+            
+            {/* Dynamic Product Page Route */}
+            <Route path="/product/:id" element={<ProductDetail />} />
 
-          {/* Additional Pages Routing Example */}
-          <Route path="/shop" element={<ShopPage />} />
+            {/* Checkout Route */}
+            <Route path="/checkout" element={<Checkout />} />
+            {/* Contact Us Route */}
+            <Route path="/contact-us" element={<ContactUs />} />
+          </Routes>
 
-          {/* Rings Route - Full ring collection */}
-          <Route path="/rings" element={<Rings />} />
-
-          {/* New Arrivals Route - Latest pieces across all categories */}
-          <Route path="/new-arrivals" element={<NewArrivals />} />
-
-          <Route path="/necklaces" element={<Necklaces />} />
-          <Route path="/earrings" element={<Earrings />} />
-          <Route path="/bracelets" element={<Bracelets />} />
-          <Route path="/fine-jewellery" element={<FineJewellery />} />
-          <Route path="/bridal" element={<Bridal />} />
-          <Route path="/gifts" element={<Gifts />} />
-        </Routes>
-        <Footer/>
-      </div>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    </CartProvider>
   );
 }

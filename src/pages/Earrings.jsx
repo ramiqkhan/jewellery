@@ -1,17 +1,17 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=700`;
 
-// Placeholder photography - swap for real product shots
 const IMAGES = {
   earrings: img('1630019852942-f89202989a59'),
 };
 
 const PRODUCTS = [
   {
-    id: 1,
+    id: 'zelora-earring-01',
     name: 'Akoya Cultured Pearl Drop Earrings',
     category: 'Drops',
     metal: '18K Yellow Gold',
@@ -20,7 +20,7 @@ const PRODUCTS = [
     image: IMAGES.earrings,
   },
   {
-    id: 2,
+    id: 'zelora-earring-02',
     name: 'Diamond Studded Hoop Earrings',
     category: 'Hoops',
     metal: '18K Rose Gold',
@@ -29,7 +29,7 @@ const PRODUCTS = [
     image: IMAGES.earrings,
   },
   {
-    id: 3,
+    id: 'zelora-earring-03',
     name: 'Round Brilliant Diamond Studs',
     category: 'Studs',
     metal: 'Platinum',
@@ -38,7 +38,7 @@ const PRODUCTS = [
     image: IMAGES.earrings,
   },
   {
-    id: 4,
+    id: 'zelora-earring-04',
     name: 'Classic Gold Huggie Hoops',
     category: 'Hoops',
     metal: '18K Yellow Gold',
@@ -46,7 +46,7 @@ const PRODUCTS = [
     image: IMAGES.earrings,
   },
   {
-    id: 5,
+    id: 'zelora-earring-05',
     name: 'Sapphire Halo Drop Earrings',
     category: 'Drops',
     metal: '18K White Gold',
@@ -54,7 +54,7 @@ const PRODUCTS = [
     image: IMAGES.earrings,
   },
   {
-    id: 6,
+    id: 'zelora-earring-06',
     name: 'Pearl Stud Earrings',
     category: 'Studs',
     metal: '14K Yellow Gold',
@@ -78,6 +78,7 @@ export default function Earrings() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState({});
+  const { addToCart, setIsCartOpen } = useCart();
 
   const visibleProducts = useMemo(() => {
     const filtered =
@@ -90,12 +91,33 @@ export default function Earrings() {
     return filtered;
   }, [activeCategory, sortBy]);
 
-  const toggleWishlist = (id) => {
+  const toggleWishlist = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleQuickAdd = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (addToCart) {
+      addToCart({
+        id: product.id,
+        productId: product.id,
+        title: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      });
+      if (typeof setIsCartOpen === 'function') {
+        setIsCartOpen(true);
+      }
+    }
+  };
+
   return (
-    <main className="bg-[#FCFCFB] text-[#1A1A1A]">
+    <main className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
       {/* Page Header */}
       <section className="bg-[#111111] text-white px-6 py-16 md:py-24 text-center">
         <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
@@ -110,7 +132,7 @@ export default function Earrings() {
           Earrings
         </h1>
         <div className="w-10 h-px bg-[#D4AF37] mx-auto mt-4 mb-5" />
-        <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed font-serif">
+        <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed font-serif">
           Studs, hoops and drops - from an everyday sparkle to an evening statement.
         </p>
       </section>
@@ -168,8 +190,8 @@ export default function Earrings() {
                 )}
 
                 <button
-                  onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-xs rounded-full hover:text-black z-10 transition-colors shadow-sm"
+                  onClick={(e) => toggleWishlist(e, product.id)}
+                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:text-black z-10 transition-colors shadow-sm"
                   aria-label={wishlist[product.id] ? 'Remove from wishlist' : 'Save to wishlist'}
                   aria-pressed={!!wishlist[product.id]}
                 >
@@ -179,20 +201,36 @@ export default function Earrings() {
                   />
                 </button>
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+                {/* Clickable Image -> Navigates to ProductDetail */}
+                <Link to={`/product/${product.id}`} className="block w-full h-full">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </Link>
+
+                {/* Hover Quick Add Overlay */}
+                <button
+                  onClick={(e) => handleQuickAdd(e, product)}
+                  className="absolute bottom-0 inset-x-0 bg-black/90 text-white text-[10px] uppercase font-bold tracking-[0.2em] py-3 flex items-center justify-center gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10 hover:bg-[#D4AF37]"
+                >
+                  <ShoppingBag size={14} />
+                  <span>Quick Add</span>
+                </button>
               </div>
 
               <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
                 {product.metal}
               </p>
-              <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
-                {product.name}
-              </h2>
+              
+              <Link to={`/product/${product.id}`}>
+                <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
+                  {product.name}
+                </h2>
+              </Link>
+
               <p className="text-xs font-semibold tracking-wide mt-2">{formatPrice(product.price)}</p>
             </article>
           ))}

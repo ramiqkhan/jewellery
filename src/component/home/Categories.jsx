@@ -3,22 +3,22 @@ import React from 'react';
 const FEATURED_COLLECTIONS = [
   {
     title: 'SHOP COLLECTION',
-    subtitle: 'Timeless Masterpieces',
+    // subtitle: 'Timeless Masterpieces',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP NEW RELEASES',
-    subtitle: 'Latest Arrivals',
+    // subtitle: 'Latest Arrivals',
     image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP 80S COLLECTION',
-    subtitle: 'Vintage Inspired',
+    // subtitle: 'Vintage Inspired',
     image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=900',
   },
   {
     title: 'SHOP BRIDAL SETS',
-    subtitle: 'For Everlasting Moments',
+    // subtitle: 'For Everlasting Moments',
     image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&q=80&w=900',
   },
 ];

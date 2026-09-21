@@ -1,78 +1,79 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=700`;
 
 // Placeholder photography - swap `image` for real product shots
 const RINGS = [
   {
-    id: 1,
+    id: 'zelora-ring-01',
     name: '18K Yellow Gold Diamond Solitaire Ring',
     category: 'Solitaire',
     metal: '18K Yellow Gold',
-    price: 1250,
+    price: 185000,
     tag: 'Bestseller',
     image: img('1603561591411-07134e71a2a9'),
   },
   {
-    id: 2,
+    id: 'zelora-ring-02',
     name: 'Platinum Round Brilliant Engagement Ring',
     category: 'Solitaire',
     metal: 'Platinum',
-    price: 4800,
+    price: 245000,
     tag: 'Exclusive',
     image: img('1605100804763-247f67b3557e'),
   },
   {
-    id: 3,
+    id: 'zelora-ring-03',
     name: 'Pavé Diamond Eternity Band',
     category: 'Eternity',
     metal: '18K White Gold',
-    price: 2150,
+    price: 215000,
     tag: 'New',
     image: img('1599643478518-a784e5dc4c8f'),
   },
   {
-    id: 4,
+    id: 'zelora-ring-04',
     name: 'Art Deco Sapphire Cocktail Ring',
     category: 'Vintage',
     metal: '18K Yellow Gold',
-    price: 3200,
+    price: 320000,
     tag: 'Limited',
     image: img('1535632066927-ab7c9ab60908'),
   },
   {
-    id: 5,
+    id: 'zelora-ring-05',
     name: 'Classic Gold Wedding Band',
     category: 'Bridal',
     metal: '18K Rose Gold',
-    price: 680,
+    price: 68000,
     image: img('1603561591411-07134e71a2a9'),
   },
   {
-    id: 6,
+    id: 'zelora-ring-06',
     name: 'Halo Diamond Bridal Set',
     category: 'Bridal',
     metal: '18K White Gold',
-    price: 3650,
+    price: 365000,
     tag: 'Bestseller',
     image: img('1605100804763-247f67b3557e'),
   },
   {
-    id: 7,
+    id: 'zelora-ring-07',
     name: 'Emerald Cut Vintage Signet Ring',
     category: 'Vintage',
     metal: '14K Yellow Gold',
-    price: 1480,
+    price: 148000,
     image: img('1599643478518-a784e5dc4c8f'),
   },
   {
-    id: 8,
+    id: 'zelora-ring-08',
     name: 'Three-Stone Diamond Anniversary Ring',
     category: 'Solitaire',
     metal: 'Platinum',
-    price: 5200,
+    price: 520000,
     tag: 'New',
     image: img('1535632066927-ab7c9ab60908'),
   },
@@ -86,13 +87,13 @@ const SORT_OPTIONS = [
   { value: 'price-desc', label: 'Price: High to Low' },
 ];
 
-const formatPrice = (value) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
 export default function Rings() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState({});
+  const { addToCart, setIsCartOpen } = useCart();
 
   const visibleRings = useMemo(() => {
     const filtered =
@@ -105,12 +106,33 @@ export default function Rings() {
     return filtered;
   }, [activeCategory, sortBy]);
 
-  const toggleWishlist = (id) => {
+  const toggleWishlist = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleQuickAdd = (e, ring) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (addToCart) {
+      addToCart({
+        id: ring.id,
+        productId: ring.id,
+        title: ring.name,
+        price: ring.price,
+        image: ring.image,
+        quantity: 1,
+      });
+      if (typeof setIsCartOpen === 'function') {
+        setIsCartOpen(true);
+      }
+    }
+  };
+
   return (
-    <main className="bg-[#FCFCFB] text-[#1A1A1A]">
+    <main className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
       {/* Page Header */}
       <section className="bg-[#111111] text-white px-6 py-16 md:py-24 text-center">
         <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
@@ -125,7 +147,7 @@ export default function Rings() {
           Rings
         </h1>
         <div className="w-10 h-px bg-[#D4AF37] mx-auto mt-4 mb-5" />
-        <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed font-serif">
+        <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed font-serif">
           From timeless solitaires to heirloom-inspired vintage pieces, each ring is handcrafted
           and set with GIA certified stones.
         </p>
@@ -142,7 +164,7 @@ export default function Rings() {
                 aria-pressed={activeCategory === category}
                 className={`px-4 py-2 text-[11px] uppercase tracking-[0.2em] border transition-colors ${
                   activeCategory === category
-                    ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                    ? 'bg-[#1A1A1A] text-[#FCFCFB] border-[#1A1A1A]'
                     : 'bg-transparent text-gray-700 border-[#EAE6DF] hover:border-[#D4AF37] hover:text-[#9A7B1F]'
                 }`}
               >
@@ -178,14 +200,14 @@ export default function Rings() {
             <article key={ring.id} className="group flex flex-col">
               <div className="relative bg-[#F9F8F6] aspect-square overflow-hidden mb-4 border border-[#EAE6DF]">
                 {ring.tag && (
-                  <span className="absolute top-3 left-3 bg-[#1A1A1A] text-[#D4AF37] text-[9px] tracking-[0.2em] px-2.5 py-1 uppercase font-semibold z-10">
+                  <span className="absolute top-3 left-3 bg-[#1A1A1A] text-[#D4AF37] text-[9px] tracking-[0.2em] px-2.5 py-1 uppercase font-semibold z-10 pointer-events-none">
                     {ring.tag}
                   </span>
                 )}
 
                 <button
-                  onClick={() => toggleWishlist(ring.id)}
-                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-xs rounded-full hover:text-black z-10 transition-colors shadow-sm"
+                  onClick={(e) => toggleWishlist(e, ring.id)}
+                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:text-black z-20 transition-colors shadow-sm cursor-pointer"
                   aria-label={wishlist[ring.id] ? 'Remove from wishlist' : 'Save to wishlist'}
                   aria-pressed={!!wishlist[ring.id]}
                 >
@@ -195,21 +217,36 @@ export default function Rings() {
                   />
                 </button>
 
-                <img
-                  src={ring.image}
-                  alt={ring.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+                {/* Clickable Card Link to Product Detail Page */}
+                <Link to={`/product/${ring.id}`} className="block w-full h-full">
+                  <img
+                    src={ring.image}
+                    alt={ring.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </Link>
+
+                {/* Quick Add Overlay Button */}
+                <button
+                  onClick={(e) => handleQuickAdd(e, ring)}
+                  className="absolute bottom-0 inset-x-0 bg-black/90 text-white text-[10px] uppercase font-bold tracking-[0.2em] py-3 flex items-center justify-center gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10 hover:bg-[#D4AF37] cursor-pointer"
+                >
+                  <ShoppingBag size={14} />
+                  <span>Quick Add</span>
+                </button>
               </div>
 
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
-                {ring.metal}
-              </p>
-              <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
-                {ring.name}
-              </h2>
-              <p className="text-xs font-semibold tracking-wide mt-2">{formatPrice(ring.price)}</p>
+              {/* Clickable Product Details */}
+              <Link to={`/product/${ring.id}`} className="block">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
+                  {ring.metal}
+                </p>
+                <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
+                  {ring.name}
+                </h2>
+                <p className="text-xs font-semibold tracking-wide mt-2">{formatPrice(ring.price)}</p>
+              </Link>
             </article>
           ))}
         </div>

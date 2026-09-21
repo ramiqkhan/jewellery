@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=700`;
 
-// Placeholder photography - swap `image` for real product shots
+// Placeholder photography - swap for real product shots
 const ARRIVALS = [
   {
-    id: 1,
+    id: 'zelora-arrival-01',
     name: 'Classic Diamond Tennis Bracelet in White Gold',
     category: 'Bracelets',
     metal: '18K White Gold',
@@ -16,7 +17,7 @@ const ARRIVALS = [
     image: img('1611591471171-a1314efea44d'),
   },
   {
-    id: 2,
+    id: 'zelora-arrival-02',
     name: 'Pavé Diamond Eternity Band',
     category: 'Rings',
     metal: '18K White Gold',
@@ -25,7 +26,7 @@ const ARRIVALS = [
     image: img('1605100804763-247f67b3557e'),
   },
   {
-    id: 3,
+    id: 'zelora-arrival-03',
     name: 'Akoya Cultured Pearl Drop Earrings',
     category: 'Earrings',
     metal: '18K Yellow Gold',
@@ -34,7 +35,7 @@ const ARRIVALS = [
     image: img('1630019852942-f89202989a59'),
   },
   {
-    id: 4,
+    id: 'zelora-arrival-04',
     name: 'Interlocking Gold Chain Necklace',
     category: 'Necklaces',
     metal: '18K Yellow Gold',
@@ -43,7 +44,7 @@ const ARRIVALS = [
     image: img('1599643477877-530eb83abc8e'),
   },
   {
-    id: 5,
+    id: 'zelora-arrival-05',
     name: 'Three-Stone Diamond Anniversary Ring',
     category: 'Rings',
     metal: 'Platinum',
@@ -52,7 +53,7 @@ const ARRIVALS = [
     image: img('1603561591411-07134e71a2a9'),
   },
   {
-    id: 6,
+    id: 'zelora-arrival-06',
     name: 'Diamond Studded Hoop Earrings',
     category: 'Earrings',
     metal: '18K Rose Gold',
@@ -61,7 +62,7 @@ const ARRIVALS = [
     image: img('1630019852942-f89202989a59'),
   },
   {
-    id: 7,
+    id: 'zelora-arrival-07',
     name: 'Solitaire Diamond Pendant Necklace',
     category: 'Necklaces',
     metal: '18K White Gold',
@@ -70,7 +71,7 @@ const ARRIVALS = [
     image: img('1599643477877-530eb83abc8e'),
   },
   {
-    id: 8,
+    id: 'zelora-arrival-08',
     name: 'Gold Link Chain Bracelet',
     category: 'Bracelets',
     metal: '18K Yellow Gold',
@@ -106,6 +107,7 @@ export default function NewArrivals() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
   const [wishlist, setWishlist] = useState({});
+  const { addToCart, setIsCartOpen } = useCart();
 
   const visibleItems = useMemo(() => {
     const filtered =
@@ -120,15 +122,36 @@ export default function NewArrivals() {
     return sorted;
   }, [activeCategory, sortBy]);
 
-  const toggleWishlist = (id) => {
+  const toggleWishlist = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleQuickAdd = (e, item) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (addToCart) {
+      addToCart({
+        id: item.id,
+        productId: item.id,
+        title: item.name,
+        price: item.price,
+        image: item.image,
+        quantity: 1,
+      });
+      if (typeof setIsCartOpen === 'function') {
+        setIsCartOpen(true);
+      }
+    }
+  };
+
   return (
-    <main className="bg-[#FCFCFB] text-[#1A1A1A]">
+    <main className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
       {/* Page Header */}
       <section className="bg-[#111111] text-white px-6 py-16 md:py-24 text-center">
-        <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-500 mb-4">
+        <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
           <Link to="/" className="hover:text-[#D4AF37] transition-colors">Home</Link>
           <span className="mx-2">/</span>
           <span className="text-gray-300">New Arrivals</span>
@@ -199,8 +222,8 @@ export default function NewArrivals() {
                 )}
 
                 <button
-                  onClick={() => toggleWishlist(item.id)}
-                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-xs rounded-full hover:text-black z-10 transition-colors shadow-sm"
+                  onClick={(e) => toggleWishlist(e, item.id)}
+                  className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:text-black z-10 transition-colors shadow-sm"
                   aria-label={wishlist[item.id] ? 'Remove from wishlist' : 'Save to wishlist'}
                   aria-pressed={!!wishlist[item.id]}
                 >
@@ -210,21 +233,37 @@ export default function NewArrivals() {
                   />
                 </button>
 
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+                {/* Clickable Card Link to Product Detail Page */}
+                <Link to={`/product/${item.id}`} className="block w-full h-full">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                </Link>
+
+                {/* Quick Add Overlay Button */}
+                <button
+                  onClick={(e) => handleQuickAdd(e, item)}
+                  className="absolute bottom-0 inset-x-0 bg-black/90 text-white text-[10px] uppercase font-bold tracking-[0.2em] py-3 flex items-center justify-center gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10 hover:bg-[#D4AF37]"
+                >
+                  <ShoppingBag size={14} />
+                  <span>Quick Add</span>
+                </button>
               </div>
 
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
                 <span>{item.category}</span>
                 <span>Added {formatAdded(item.added)}</span>
               </div>
-              <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
-                {item.name}
-              </h2>
+
+              <Link to={`/product/${item.id}`}>
+                <h2 className="text-xs font-serif tracking-wide leading-relaxed group-hover:text-[#D4AF37] transition-colors">
+                  {item.name}
+                </h2>
+              </Link>
+
               <p className="text-[11px] text-gray-500 mt-1">{item.metal}</p>
               <p className="text-xs font-semibold tracking-wide mt-2">{formatPrice(item.price)}</p>
             </article>

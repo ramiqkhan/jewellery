@@ -4,23 +4,23 @@ import { Truck, ShieldCheck, RefreshCw, Sparkles } from 'lucide-react';
 const VALUE_PROPS = [
   {
     icon: Truck,
-    title: 'Insured Shipping',
-    description: 'Complimentary worldwide delivery',
+    title: 'Nationwide Delivery',
+    description: 'Free shipping & COD across Pakistan',
   },
   {
     icon: ShieldCheck,
-    title: 'Certified Authenticity',
-    description: 'GIA certified diamonds & metals',
+    title: 'Guaranteed Quality',
+    description: '100% premium materials & craft',
   },
   {
     icon: RefreshCw,
-    title: 'Lifetime Warranty',
-    description: 'Complimentary cleaning & care',
+    title: 'Lifetime Care',
+    description: 'Complimentary polishing & inspection',
   },
   {
     icon: Sparkles,
-    title: 'Signature Packaging',
-    description: 'Gift boxed with custom ribbons',
+    title: 'Luxury Packaging',
+    description: 'Bespoke box ready for gifting',
   },
 ];
 
