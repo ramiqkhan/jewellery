@@ -8,7 +8,7 @@ export default function VideoBanner() {
       <video
         autoPlay
         loop
-        muted
+        muted 
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-75 scale-105"
       >
