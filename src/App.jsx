@@ -13,13 +13,14 @@ import Necklaces from './pages/Necklaces';
 import Earrings from './pages/Earrings';
 import Bracelets from './pages/Bracelets';
 import FineJewellery from './pages/FineJewellery';
-import Bridal from './pages/Bridal';
 import Eighties from './pages/Eighties';
-import Gifts from './pages/Gifts';
+import Watches from './pages/Watches';
 import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout'; // Checkout Page Import
 import ContactUs from './pages/ContactUs'; // Contact Us Page Import
-
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import ReturnExchange from "./pages/ReturnExchange";// Returns & Exchanges Page Import
+import JewelleryCare from './pages/JewelleryCare';
 // Context Import
 import { CartProvider } from './Context/CartContext';
 
@@ -60,10 +61,10 @@ export default function App() {
             <Route path="/earrings" element={<Earrings />} />
             <Route path="/bracelets" element={<Bracelets />} />
             <Route path="/fine-jewellery" element={<FineJewellery />} />
-            <Route path="/bridal" element={<Bridal />} />
             <Route path="/80s-collection" element={<Eighties />} />
-            <Route path="/gifts" element={<Gifts />} />
-            
+            <Route path="/watches" element={<Watches />} />
+          <Route path="/returns-and-exchanges" element={<ReturnExchange />} />
+          <Route path="/jewellery-care" element={<JewelleryCare />} />
             {/* Dynamic Product Page Route */}
             <Route path="/product/:id" element={<ProductDetail />} />
 
@@ -71,6 +72,8 @@ export default function App() {
             <Route path="/checkout" element={<Checkout />} />
             {/* Contact Us Route */}
             <Route path="/contact-us" element={<ContactUs />} />
+            {/* Privacy Policy Route */}
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           </Routes>
 
           <Footer />

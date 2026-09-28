@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight, Phone, Mail, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+  import { Link } from 'react-router-dom';    
 export default function Footer() {
   return (
     <footer className="bg-[#111111] text-[#EAE6DF] pt-20 pb-10 border-t border-[#222222]">
@@ -101,10 +101,10 @@ export default function Footer() {
           <div>
             <h4 className="text-xs uppercase font-semibold tracking-[0.25em] text-white mb-6">Customer Care</h4>
             <ul className="space-y-3 text-xs tracking-wider text-gray-400 font-serif">
-              <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Bespoke Appointments</a></li>
-              <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Returns & Exchanges</a></li>
+              <li><a href="/privacy-policy" className="hover:text-[#D4AF37] transition-colors">Privacy & Policy</a></li>
+              <li><a href="/returns-and-exchanges" className="hover:text-[#D4AF37] transition-colors">Returns & Exchanges</a></li>
               <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Ring Size Guide</a></li>
-              <li><a href="#" className="hover:text-[#D4AF37] transition-colors">Jewellery Care & Cleaning</a></li>
+              <li><a href="/jewellery-care" className="hover:text-[#D4AF37] transition-colors">Jewellery Care & Cleaning</a></li>
             </ul>
           </div>
 

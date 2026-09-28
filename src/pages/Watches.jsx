@@ -4,64 +4,65 @@ import { Heart } from 'lucide-react';
 
 const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=700`;
 
-// Placeholder photography - swap for real product shots
+// Placeholder photography - watch collection shots
 const IMAGES = {
-  necklace: img('1599643477877-530eb83abc8e'),
-  earrings: img('1630019852942-f89202989a59'),
-  bracelet: img('1611591471171-a1314efea44d'),
+  automatic: img('1522335789203-aabd1fc54bc9'),
+  chronograph: img('1547996160-01ff74742fd0'),
+  luxury: img('1523275335684-37898b6baf30'),
 };
 
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Heart Locket Pendant',
-    category: 'Under PKR 100,000',
-    metal: '14K Yellow Gold',
-    price: 64000,
-    tag: 'Bestseller',
-    image: IMAGES.necklace,
+    name: 'Zelora Royal Oak Skeleton Automatic',
+    category: 'Under PKR 500,000',
+    metal: 'Rose Gold & Obsidian Dial',
+    price: 450000,
+    tag: 'Haute Horlogerie',
+    image: IMAGES.automatic,
   },
   {
     id: 2,
-    name: 'Pearl Stud Earrings',
-    category: 'Under PKR 100,000',
-    metal: '14K Yellow Gold',
-    price: 36000,
-    image: IMAGES.earrings,
+    name: 'Zelora Cosmograph Gold Edition',
+    category: 'PKR 500,000 and over',
+    metal: 'Yellow Gold & Onyx Dial',
+    price: 620000,
+    tag: 'Bestseller',
+    image: IMAGES.chronograph,
   },
   {
     id: 3,
-    name: 'Curb Chain Bracelet',
-    category: 'Under PKR 100,000',
-    metal: 'Sterling Silver',
-    price: 42000,
-    image: IMAGES.bracelet,
+    name: 'Classic Vintage Leather Automatic',
+    category: 'Under PKR 500,000',
+    metal: 'Stainless Steel & Calfskin',
+    price: 280000,
+    image: IMAGES.luxury,
   },
   {
     id: 4,
-    name: 'Diamond Studded Hoop Earrings',
-    category: 'PKR 100,000 and over',
-    metal: '18K Rose Gold',
-    price: 112000,
-    tag: 'New',
-    image: IMAGES.earrings,
+    name: 'Diamond Skeleton Tourbillon',
+    category: 'PKR 500,000 and over',
+    metal: '18K White Gold & Diamonds',
+    price: 950000,
+    tag: 'Limited Edition',
+    image: IMAGES.automatic,
   },
   {
     id: 5,
-    name: 'Solitaire Diamond Pendant Necklace',
-    category: 'PKR 100,000 and over',
-    metal: '18K White Gold',
-    price: 189000,
-    image: IMAGES.necklace,
+    name: 'Monaco Heritage Chronograph',
+    category: 'Under PKR 500,000',
+    metal: 'Brushed Steel & Sapphire Glass',
+    price: 390000,
+    image: IMAGES.chronograph,
   },
   {
     id: 6,
-    name: 'Polished Gold Bangle',
-    category: 'PKR 100,000 and over',
-    metal: '18K Yellow Gold',
-    price: 138000,
-    tag: 'Limited',
-    image: IMAGES.bracelet,
+    name: 'Presidential Diamond Dial Timepiece',
+    category: 'PKR 500,000 and over',
+    metal: '18K Solid Yellow Gold',
+    price: 820000,
+    tag: 'New',
+    image: IMAGES.luxury,
   },
 ];
 
@@ -75,7 +76,7 @@ const SORT_OPTIONS = [
 
 const formatPrice = (value) => `PKR ${value.toLocaleString()}`;
 
-export default function Gifts() {
+export default function Watches() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState({});
@@ -102,24 +103,24 @@ export default function Gifts() {
         <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
           <Link to="/" className="hover:text-[#D4AF37] transition-colors">Home</Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-300">Gifts</span>
+          <span className="text-gray-300">Watches</span>
         </nav>
         <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2">
-          Thoughtfully Chosen
+          Master Timepieces
         </p>
         <h1 className="text-3xl md:text-4xl font-serif font-light tracking-[0.2em] uppercase">
-          Gifts
+          Watches
         </h1>
         <div className="w-10 h-px bg-[#D4AF37] mx-auto mt-4 mb-5" />
         <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed font-serif">
-          Pieces that are ready to give, every one presented in our signature gift box with a custom ribbon.
+          Precision mechanical engineering meets luxury horology. Explore our curated selection of automatic and high-complication timepieces.
         </p>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14">
         {/* Filter & Sort Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-6 border-b border-[#EAE6DF]">
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter gifts">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter watches">
             {CATEGORIES.map((category) => (
               <button
                 key={category}
@@ -138,7 +139,7 @@ export default function Gifts() {
 
           <div className="flex items-center justify-between md:justify-end gap-6">
             <p className="text-xs text-gray-500 tracking-wide">
-              {visibleProducts.length} {visibleProducts.length === 1 ? 'piece' : 'pieces'}
+              {visibleProducts.length} {visibleProducts.length === 1 ? 'timepiece' : 'timepieces'}
             </p>
             <label className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-gray-500">
               Sort

@@ -11,9 +11,8 @@ const NAV_ITEMS = [
   { label: 'EARRINGS', to: '/earrings', hasDropdown: false },
   { label: 'BRACELETS', to: '/bracelets', hasDropdown: false },
   { label: 'FINE JEWELLERY', to: '/fine-jewellery', hasDropdown: true, highlight: true },
-  { label: 'BRIDAL', to: '/bridal', hasDropdown: false },
   { label: '80S COLLECTION', to: '/80s-collection', hasDropdown: false },
-  { label: 'GIFTS', to: '/gifts', hasDropdown: false },
+  { label: 'WATCHES', to: '/watches', hasDropdown: false },
 ];
 
 export default function Navbar() {
