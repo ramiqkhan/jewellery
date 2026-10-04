@@ -20,7 +20,7 @@ import Checkout from './pages/Checkout'; // Checkout Page Import
 import ContactUs from './pages/ContactUs'; // Contact Us Page Import
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import ReturnExchange from "./pages/ReturnExchange";// Returns & Exchanges Page Import
-import JewelleryCare from './pages/JewelleryCare';
+import ShippingPolicy from "./pages/ShippingPolicy"; // Shipping Policy Page Import
 // Context Import
 import { CartProvider } from './Context/CartContext';
 
@@ -64,7 +64,7 @@ export default function App() {
             <Route path="/80s-collection" element={<Eighties />} />
             <Route path="/watches" element={<Watches />} />
           <Route path="/returns-and-exchanges" element={<ReturnExchange />} />
-          <Route path="/jewellery-care" element={<JewelleryCare />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
             {/* Dynamic Product Page Route */}
             <Route path="/product/:id" element={<ProductDetail />} />
 

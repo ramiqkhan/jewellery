@@ -1,62 +1,39 @@
 import React, { useEffect } from 'react';
-import { ArrowUpRight } from 'lucide-react';
 
 export default function InstagramFeed() {
   const profileUrl = "https://www.instagram.com/zelora.officials";
-  
-  // Paste your actual Behold Feed ID here
-  const BEHOLD_FEED_ID = "YOUR_BEHOLD_FEED_ID_HERE";
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://w.behold.so/widget.js";
-    script.type = "module";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
+    // Check if Behold script is already injected
+    if (!window.__bhldScript) {
+      window.__bhldScript = true;
+      const script = document.createElement("script");
+      script.type = "module";
+      script.src = "https://w.behold.so/widget.js";
+      document.head.appendChild(script);
+    }
   }, []);
 
   return (
-    <section className="bg-white py-20 px-6 md:px-12 text-[#111111] overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row items-center justify-between mb-12 text-center md:text-left gap-6">
-          <div>
-            <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2 flex items-center justify-center md:justify-start gap-2">
-              <svg 
-                className="w-3.5 h-3.5 fill-current text-[#D4AF37]" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg> 
-              @zelora.officials
-            </p>
-            <h2 className="text-2xl md:text-4xl font-serif font-light tracking-[0.18em] uppercase text-[#111111]">
-              On The Gram
-            </h2>
-          </div>
+    <section className="bg-white py-12 md:py-16 text-[#111111] border-t border-[#EAE6DF]">
+      {/* Centered Minimal Header */}
+      <div className="text-center mb-8 md:mb-10 px-4">
+        <p className="text-[10px] md:text-xs uppercase font-medium tracking-[0.25em] text-gray-500 mb-1.5">
+          FOLLOW US
+        </p>
+        <a 
+          href={profileUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-xl md:text-3xl font-extrabold uppercase tracking-[0.12em] text-[#111111] hover:text-[#D4AF37] transition-colors inline-block"
+        >
+          @ZELORA.OFFICIALS
+        </a>
+      </div>
 
-          <a
-            href={profileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#111111] text-white text-[10px] uppercase tracking-[0.25em] font-semibold hover:bg-[#D4AF37] hover:text-black transition-colors"
-          >
-            <span>Follow Our Maison</span>
-            <ArrowUpRight size={14} />
-          </a>
-        </div>
-
-        {/* Live Instagram Feed Embed Container */}
-        <div className="min-h-[300px]">
-          <figure data-behold-id={BEHOLD_FEED_ID}></figure>
-        </div>
+      {/* Controlled Desktop Container */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
+        <behold-widget feed-id="p14pe885DVkmWkHbApGS"></behold-widget>
       </div>
     </section>
   );

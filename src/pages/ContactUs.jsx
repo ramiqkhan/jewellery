@@ -35,7 +35,7 @@ export default function ContactUs() {
           <span className="text-gray-300">Contact Us</span>
         </nav>
         <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2">
-          Concierge Services
+          Client Care Services
         </p>
         <h1 className="text-3xl md:text-4xl font-serif font-light tracking-[0.2em] uppercase">
           At Your Service
@@ -81,29 +81,23 @@ export default function ContactUs() {
                   </div>
                   <div>
                     <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold mb-1">
-                      Email Concierge
+                      Email Support
                     </h3>
-                    <p className="text-xs text-gray-600 font-serif">concierge@zelora.com</p>
+                    <p className="text-xs text-gray-600 font-serif">support@zelora.com</p>
                     <p className="text-[10px] text-gray-400 mt-0.5">Bespoke & Private Appointments</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-[#111111] text-[#D4AF37] shrink-0 mt-0.5">
-                    <MapPin size={18} />
-                  </div>
-                  <div>
-                    <h3 className="text-[11px] uppercase tracking-[0.2em] font-semibold mb-1">
-                      Flagship Boutique
-                    </h3>
-                    <p className="text-xs text-gray-600 font-serif">
-                      Zelora Haute Joaillerie, Suite 402, Boulevard Avenue
-                    </p>
-                    <p className="text-xs text-gray-600 font-serif">Clifton, Karachi, Pakistan</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
+                <div className="border-l-2 border-[#D4AF37] pl-6 py-2 my-6 bg-[#F9F8F6]">
+              <p className="text-xs font-serif italic text-gray-700 leading-relaxed">
+                "Precision in detail, discretion in service, and perfection in craft."
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold mt-2">
+                — Zelora House Standard
+              </p>
+            </div>
+          </div>
+                {/* <div className="flex items-start gap-4">
                   <div className="p-3 bg-[#111111] text-[#D4AF37] shrink-0 mt-0.5">
                     <Clock size={18} />
                   </div>
@@ -114,20 +108,12 @@ export default function ContactUs() {
                     <p className="text-xs text-gray-600 font-serif">By Appointment Only</p>
                     <p className="text-[10px] text-gray-400 mt-0.5">VIP viewing suites available upon request</p>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
             {/* Quote Block */}
-            <div className="border-l-2 border-[#D4AF37] pl-6 py-2 my-6 bg-[#F9F8F6]">
-              <p className="text-xs font-serif italic text-gray-700 leading-relaxed">
-                "Precision in detail, discretion in service, and perfection in craft."
-              </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4AF37] font-semibold mt-2">
-                — Zelora House Standard
-              </p>
-            </div>
-          </div>
+            
 
           {/* Right Column: Contact Form */}
           <div className="lg:col-span-7 bg-white p-8 md:p-12 border border-[#EAE6DF] shadow-sm">
@@ -141,7 +127,7 @@ export default function ContactUs() {
                 <CheckCircle2 size={48} className="mx-auto text-[#D4AF37]" />
                 <h3 className="text-lg font-serif uppercase tracking-wider">Message Received</h3>
                 <p className="text-xs text-gray-600 font-serif max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out to Zelora Concierge. A senior client advisor has been assigned to your request and will contact you via email shortly.
+                  Thank you for reaching out to Zelora Support. A senior client advisor has been assigned to your request and will contact you via email shortly.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
