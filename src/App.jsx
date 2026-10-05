@@ -19,6 +19,7 @@ import ProductDetail from './pages/ProductDetail';
 import Checkout from './pages/Checkout'; // Checkout Page Import
 import ContactUs from './pages/ContactUs'; // Contact Us Page Import
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import SearchResults from './pages/SearchResults';
 import ReturnExchange from "./pages/ReturnExchange";// Returns & Exchanges Page Import
 import ShippingPolicy from "./pages/ShippingPolicy"; // Shipping Policy Page Import
 // Context Import
@@ -63,6 +64,7 @@ export default function App() {
             <Route path="/fine-jewellery" element={<FineJewellery />} />
             <Route path="/80s-collection" element={<Eighties />} />
             <Route path="/watches" element={<Watches />} />
+            <Route path="/search" element={<SearchResults />} />
           <Route path="/returns-and-exchanges" element={<ReturnExchange />} />
           <Route path="/shipping-policy" element={<ShippingPolicy />} />
             {/* Dynamic Product Page Route */}

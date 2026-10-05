@@ -1,14 +1,8 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 
 export default function FeaturedCollections() {
-  const navigate = useNavigate();
-
-  const handleCardClick = (path) => {
-    navigate(path);
-  };
-
   return (
     <section className="w-full bg-white py-16 md:py-24 text-[#111111] px-4 md:px-8 antialiased">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -17,9 +11,9 @@ export default function FeaturedCollections() {
         <div className="lg:col-span-7 flex flex-col gap-6">
 
           {/* Top Banner Box - Fully Clickable */}
-          <div 
-            onClick={() => handleCardClick('/shop')}
-            className="bg-[#FAF9F6] border border-[#EAE6DF] p-8 md:p-10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden group cursor-pointer hover:border-[#D4AF37] transition-all duration-300"
+          <Link
+            to="/fine-jewellery"
+            className="bg-[#FAF9F6] border border-[#EAE6DF] p-8 md:p-10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative overflow-hidden group cursor-pointer hover:border-[#D4AF37] transition-all duration-300 block"
           >
             <div>
               <span className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37] font-semibold flex items-center gap-2 mb-2.5">
@@ -37,19 +31,19 @@ export default function FeaturedCollections() {
               <span>SHOP</span>
               <span>NOW</span>
             </div>
-          </div>
+          </Link>
 
           {/* Bottom 2 Grid Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-            {/* Card 1: Shop Pendants */}
+            {/* Card 1: Shop Necklaces */}
             <Link
-              to="/pendants"
+              to="/necklaces"
               className="group relative bg-[#F5F5F3] border border-[#EAE6DF] rounded-2xl h-[360px] p-6 flex flex-col justify-end overflow-hidden hover:border-[#D4AF37] transition-all duration-500 cursor-pointer block"
             >
               <img
                 src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800"
-                alt="Shop Pendants"
+                alt="Shop Necklaces"
                 className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -57,10 +51,10 @@ export default function FeaturedCollections() {
               <div className="relative z-10 flex items-end justify-between gap-4">
                 <div>
                   <h3 className="text-xl font-serif uppercase tracking-wider text-white group-hover:text-[#D4AF37] transition-colors">
-                    Shop Pendants
+                    Shop Necklaces
                   </h3>
                   <p className="text-[11px] text-gray-300 font-sans mt-1">
-                    Elevate your look with bold statement pendants.
+                    Pendants, chains and pearls layered for every occasion.
                   </p>
                 </div>
                 <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-full text-white group-hover:bg-[#D4AF37] group-hover:text-black transition-colors shrink-0">

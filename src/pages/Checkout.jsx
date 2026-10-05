@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, ArrowLeft, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Lock, ArrowLeft, CheckCircle2, ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
+import { createOrder } from '../api';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ export default function Checkout() {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isPlacing, setIsPlacing] = useState(false);
+  const [orderError, setOrderError] = useState('');
+  const [placedOrder, setPlacedOrder] = useState(null);
 
   const shippingFee = totalPrice > 50000 ? 0 : 1500;
   const finalTotal = totalPrice + shippingFee;
@@ -28,10 +32,42 @@ export default function Checkout() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitOrder = (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
-    if (clearCart) clearCart();
-    setIsSubmitted(true);
+    if (isPlacing) return;
+    setOrderError('');
+    setIsPlacing(true);
+
+    try {
+      const res = await createOrder({
+        customer: {
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+        },
+        shippingAddress: {
+          line1: formData.address,
+          city: formData.city,
+          postalCode: formData.postalCode,
+          country: 'Pakistan',
+        },
+        items: cart.map((item) => ({
+          productId: item.productId || item.id,
+          size: item.size || item.variant || '',
+          quantity: item.quantity,
+        })),
+        // Backend expects "bank-transfer", the radio button below still says "bank"
+        paymentMethod: formData.paymentMethod === 'bank' ? 'bank-transfer' : 'cod',
+      });
+
+      setPlacedOrder(res.order);
+      if (clearCart) clearCart();
+      setIsSubmitted(true);
+    } catch (err) {
+      setOrderError(err.message || 'Could not place your order. Please try again.');
+    } finally {
+      setIsPlacing(false);
+    }
   };
 
   if (isSubmitted) {
@@ -43,6 +79,11 @@ export default function Checkout() {
             Order Confirmed
           </p>
           <h1 className="text-2xl font-serif text-[#1A1A1A]">Thank You For Your Purchase</h1>
+          {placedOrder?.orderNumber && (
+            <p className="text-xs font-mono font-semibold text-[#1A1A1A] bg-[#FCFCFB] border border-[#EAE6DF] py-2">
+              Order #{placedOrder.orderNumber}
+            </p>
+          )}
           <p className="text-xs text-gray-500 font-serif leading-relaxed">
             Your order has been placed successfully. A confirmation email with order details has been sent to <span className="font-semibold text-black">{formData.email || 'your email'}</span>.
           </p>
@@ -228,11 +269,20 @@ export default function Checkout() {
                   </div>
                 </div>
 
+                {orderError && (
+                  <div className="flex items-start gap-2 border border-red-200 bg-red-50 text-red-700 p-3 text-xs">
+                    <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                    <span>{orderError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-4 bg-[#1A1A1A] text-white text-xs uppercase tracking-[0.25em] hover:bg-[#D4AF37] hover:text-black transition-all duration-300 font-medium"
+                  disabled={isPlacing}
+                  className="w-full py-4 bg-[#1A1A1A] text-white text-xs uppercase tracking-[0.25em] hover:bg-[#D4AF37] hover:text-black transition-all duration-300 font-medium disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  Place Order
+                  {isPlacing && <Loader2 size={14} className="animate-spin" />}
+                  {isPlacing ? 'Placing Order...' : 'Place Order'}
                 </button>
               </form>
             </div>

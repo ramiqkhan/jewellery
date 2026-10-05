@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Search, User, ShoppingBag, Menu, X, ChevronRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Search, User, ShoppingBag, Menu, X, ChevronRight, Loader2 } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
+import { getSearchSuggestions } from '../api';
+
+const POPULAR_SEARCHES = ['Diamond Ring', 'Gold Chains', 'Pearl Earrings', 'Tennis Bracelet'];
+const formatPrice = (value) => `PKR ${Number(value || 0).toLocaleString()}`;
 
 // `to` is the route for the item; items without one are not built yet and stay as "#"
 const NAV_ITEMS = [
@@ -16,12 +20,46 @@ const NAV_ITEMS = [
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  // Search box state: typed query, live suggestions (GET /products/search/suggestions)
+  const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState({ products: [], links: [] });
+  const [suggestLoading, setSuggestLoading] = useState(false);
+  const suggestDebounce = useRef(null);
+
   // Connect to global cart context
   const { totalItems, setIsCartOpen } = useCart();
+
+  useEffect(() => {
+    if (suggestDebounce.current) clearTimeout(suggestDebounce.current);
+
+    if (!query.trim()) {
+      setSuggestions({ products: [], links: [] });
+      setSuggestLoading(false);
+      return;
+    }
+
+    setSuggestLoading(true);
+    suggestDebounce.current = setTimeout(() => {
+      getSearchSuggestions(query, 6)
+        .then((res) => setSuggestions({ products: res.products || [], links: res.links || [] }))
+        .catch(() => setSuggestions({ products: [], links: [] }))
+        .finally(() => setSuggestLoading(false));
+    }, 300);
+
+    return () => clearTimeout(suggestDebounce.current);
+  }, [query]);
+
+  const runSearch = (term) => {
+    const trimmed = term.trim();
+    if (!trimmed) return;
+    navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+    setIsSearchOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
@@ -174,33 +212,107 @@ export default function Navbar() {
 
       {/* Search Modal */}
       {isSearchOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center pt-20 px-4">
-          <div className="bg-white w-full max-w-xl rounded-lg p-6 shadow-2xl">
-            <div className="flex items-center border-b border-gray-300 pb-2 mb-4">
-              <Search size={20} className="text-gray-400 mr-3" />
+        <div
+          className="fixed inset-0 z-50 bg-black/60 flex items-start justify-center pt-20 px-4"
+          onClick={() => setIsSearchOpen(false)}
+        >
+          <div
+            className="bg-white w-full max-w-xl rounded-lg p-6 shadow-2xl max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                runSearch(query);
+              }}
+              className="flex items-center border-b border-gray-300 pb-2 mb-4"
+            >
+              <Search size={20} className="text-gray-400 mr-3 shrink-0" />
               <input
                 type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search rings, necklaces, bracelets..."
                 className="w-full text-base focus:outline-none bg-transparent"
                 autoFocus
               />
-              <button onClick={() => setIsSearchOpen(false)}>
+              {suggestLoading && <Loader2 size={16} className="animate-spin text-gray-400 ml-2 shrink-0" />}
+              <button type="button" onClick={() => setIsSearchOpen(false)} className="ml-2 shrink-0" aria-label="Close search">
                 <X size={22} />
               </button>
-            </div>
-            <p className="text-xs font-bold text-gray-400 tracking-wider mb-3">POPULAR SEARCHES</p>
-            <div className="flex flex-wrap gap-2">
-              {['Diamond Ring', 'Gold Chains', 'Pearl Earrings', 'Tennis Bracelet'].map(
-                (tag, i) => (
-                  <span
-                    key={i}
-                    className="bg-gray-100 text-gray-800 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-gray-200"
-                  >
-                    {tag}
-                  </span>
-                )
-              )}
-            </div>
+            </form>
+
+            {query.trim() ? (
+              <div>
+                {/* Matching product thumbnails */}
+                {suggestions.products.length > 0 && (
+                  <div className="space-y-1 mb-4">
+                    {suggestions.products.map((product) => (
+                      <button
+                        key={product._id}
+                        onClick={() => {
+                          navigate(`/product/${product.slug || product._id}`);
+                          setIsSearchOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 p-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                      >
+                        <div className="w-11 h-11 bg-gray-100 shrink-0 overflow-hidden rounded-sm">
+                          {product.image?.url && (
+                            <img src={product.image.url} alt="" className="w-full h-full object-cover" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-900 truncate">{product.name}</p>
+                          <p className="text-xs text-gray-400">{formatPrice(product.price)}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Matching navbar pages, e.g. typing "ring" links to the Rings page */}
+                {suggestions.links.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {suggestions.links.map((link) => (
+                      <Link
+                        key={link.slug}
+                        to={`/${link.slug}`}
+                        onClick={() => setIsSearchOpen(false)}
+                        className="bg-gray-100 text-gray-800 text-xs px-3 py-1.5 rounded-full hover:bg-gray-200"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
+                {!suggestLoading && suggestions.products.length === 0 && suggestions.links.length === 0 && (
+                  <p className="text-sm text-gray-400 mb-4">No matches yet - press Enter to search anyway.</p>
+                )}
+
+                <button
+                  onClick={() => runSearch(query)}
+                  className="w-full text-left text-xs font-semibold text-black border-t border-gray-100 pt-3 hover:text-[#D4AF37] transition-colors"
+                >
+                  See all results for "{query}"
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs font-bold text-gray-400 tracking-wider mb-3">POPULAR SEARCHES</p>
+                <div className="flex flex-wrap gap-2">
+                  {POPULAR_SEARCHES.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => runSearch(tag)}
+                      className="bg-gray-100 text-gray-800 text-xs px-3 py-1.5 rounded-full cursor-pointer hover:bg-gray-200"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

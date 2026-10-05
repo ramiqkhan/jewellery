@@ -4,6 +4,7 @@ import ValueProps from '../component/home/ValueProps';
 import Categories from '../component/home/Categories';
 import BestSellers from '../component/home/BestSellers';
 // import Heritage from '../component/home/Heritage';
+import CustomerReviews from '../component/CustomerReviews';
 import InstagramFeed from '../component/InstagramFeed';
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
       <Categories />
       <BestSellers />
       {/* <Heritage /> */}
+      <CustomerReviews />
       <InstagramFeed />
       <ValueProps />
     </div>
