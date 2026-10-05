@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 
 // Shared loading / error / grid / pagination block for every backend-driven
@@ -38,13 +38,22 @@ export default function ProductGridSection({
       )}
 
       {loading && (
-        <div className="py-24 flex items-center justify-center text-gray-400">
-          <Loader2 size={22} className="animate-spin" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex flex-col animate-pulse">
+              <div className="aspect-square bg-[#F0EEE9] border border-[#EAE6DF] mb-4" />
+              <div className="h-2 w-16 bg-[#EAE6DF] mb-2" />
+              <div className="h-3 w-3/4 bg-[#EAE6DF] mb-2" />
+              <div className="h-3 w-12 bg-[#EAE6DF]" />
+            </div>
+          ))}
         </div>
       )}
 
       {!loading && !error && products.length === 0 && (
-        <p className="py-24 text-center text-sm text-gray-400">{emptyLabel}</p>
+        <div className="py-24 flex flex-col items-center justify-center text-center border border-dashed border-[#EAE6DF]">
+          <p className="text-sm text-gray-400">{emptyLabel}</p>
+        </div>
       )}
 
       {!loading && products.length > 0 && (
