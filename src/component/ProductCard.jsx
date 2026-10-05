@@ -22,7 +22,7 @@ function IconButton({ onClick, disabled, label, children }) {
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="group/btn w-9 h-9 rounded-full bg-white text-[#1A1A1A] flex items-center justify-center shadow-md hover:bg-[#1A1A1A] transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
+      className="w-10 h-10 rounded-full bg-white text-[#1A1A1A] flex items-center justify-center shadow-md hover:bg-[#D4AF37] transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
     >
       {children}
     </button>
@@ -53,9 +53,9 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
   return (
     <>
       <article className="group flex flex-col">
-        <div className="relative bg-[#F4F2EE] aspect-square overflow-hidden mb-3 border border-[#EAE6DF] shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
+        <div className="relative bg-[#F4F2EE] aspect-square overflow-hidden rounded-lg mb-5 border border-[#EAE6DF] shadow-sm transition-all duration-300 group-hover:shadow-[0_18px_40px_-16px_rgba(26,26,26,0.35)] group-hover:border-[#D4AF37]/60">
           {(discountPercent || isDisplayableBadge(product.badge)) && (
-            <span className="absolute top-3 left-3 bg-[#1A1A1A] text-white text-[10px] font-semibold px-2.5 py-1 rounded-sm z-10 pointer-events-none">
+            <span className="absolute top-3 left-3 bg-[#1A1A1A] text-[#D4AF37] text-[9px] font-semibold tracking-[0.15em] uppercase px-2.5 py-1.5 rounded-sm z-10 pointer-events-none shadow-sm">
               {discountPercent ? `-${discountPercent}%` : product.badge}
             </span>
           )}
@@ -70,9 +70,9 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
             }}
             aria-label={isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}
             aria-pressed={isWishlisted}
-            className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+            className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm border border-[#EAE6DF] flex items-center justify-center shadow-sm hover:border-[#D4AF37] transition-colors"
           >
-            <Heart size={15} className={isWishlisted ? 'fill-red-500 text-red-500' : 'text-[#1A1A1A]'} />
+            <Heart size={15} className={isWishlisted ? 'fill-[#D4AF37] text-[#D4AF37]' : 'text-[#1A1A1A]'} />
           </button>
 
           <Link to={href} className="block w-full h-full">
@@ -105,7 +105,7 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
                 setQuickViewOpen(true);
               }}
             >
-              <Eye size={15} className="group-hover/btn:text-white transition-colors" />
+              <Eye size={15} />
             </IconButton>
 
             <IconButton
@@ -117,7 +117,7 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
                 onQuickAdd(product);
               }}
             >
-              <ShoppingBag size={15} className="group-hover/btn:text-white transition-colors" />
+              <ShoppingBag size={15} />
             </IconButton>
           </div>
 
@@ -138,23 +138,39 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
           )}
 
           {outOfStock && (
-            <div className="absolute bottom-0 inset-x-0 bg-gray-700/90 text-white text-[10px] uppercase font-bold tracking-[0.2em] py-2 text-center z-10">
+            <div className="absolute bottom-0 inset-x-0 bg-[#1A1A1A]/95 text-[#D4AF37] text-[10px] uppercase font-bold tracking-[0.25em] py-2.5 text-center z-10">
               Out of Stock
             </div>
           )}
         </div>
 
-        <Link to={href} className="block">
-          <h2 className="text-[11px] font-semibold uppercase tracking-wide text-[#1A1A1A] group-hover:text-[#D4AF37] transition-colors line-clamp-2">
+        <Link to={href} className="block px-0.5">
+          {product.category && (
+            <p className="text-[9px] uppercase tracking-[0.25em] text-[#9A7B1F] mb-2 font-semibold">
+              {product.category}
+            </p>
+          )}
+
+          <p className="text-[8px] uppercase tracking-[0.2em] text-gray-400 mb-0.5">Name</p>
+          <h2 className="font-serif capitalize text-[15px] leading-snug text-[#1A1A1A] group-hover:text-[#9A7B1F] transition-colors line-clamp-2">
             {product.name}
           </h2>
-          <div className="flex items-center gap-2 mt-1.5">
+
+          <p className="text-[8px] uppercase tracking-[0.2em] text-gray-400 mt-3 mb-0.5">Price</p>
+          <div className="flex items-baseline gap-2">
             {hasDiscount && (
               <span className="text-xs text-gray-400 line-through">PKR {formatPrice(compareAtPrice)}</span>
             )}
-            <span className="text-sm font-semibold text-[#1A1A1A]">PKR {formatPrice(product.price)}</span>
-            {lowStock && <span className="text-[10px] text-amber-600 font-medium ml-auto">Low Stock</span>}
+            <span className="text-base font-semibold text-[#1A1A1A] tracking-wide">
+              PKR {formatPrice(product.price)}
+            </span>
           </div>
+
+          {lowStock && (
+            <span className="inline-block mt-2 text-[9px] uppercase tracking-[0.15em] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5">
+              Only Few Left
+            </span>
+          )}
         </Link>
       </article>
 
