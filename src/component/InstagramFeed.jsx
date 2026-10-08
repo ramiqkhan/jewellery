@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getJson } from '../api';
 
 function InstagramIcon({ size = 22 }) {
@@ -36,6 +36,26 @@ function BeholdWidget() {
 // One tile: the whole picture is a link to the Instagram post (the link itself is never shown)
 function PostTile({ post }) {
   const isVideo = post.media.type === 'video';
+  const videoRef = useRef(null);
+
+  // Only decode/play a video while it's actually on screen - with many tiles in the
+  // strip, having every video playing at once (even offscreen ones) is what makes
+  // the scroll stutter. Pausing offscreen video frees that up for the one scroll animation.
+  useEffect(() => {
+    if (!isVideo) return undefined;
+    const video = videoRef.current;
+    if (!video || typeof IntersectionObserver === 'undefined') return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [isVideo]);
 
   return (
     <a
@@ -47,11 +67,11 @@ function PostTile({ post }) {
     >
       {isVideo ? (
         <video
+          ref={videoRef}
           src={post.media.url}
           poster={post.posterUrl}
           muted
           loop
-          autoPlay
           playsInline
           preload="metadata"
           className="h-full w-full object-cover"
@@ -77,6 +97,9 @@ function PostTile({ post }) {
 
 export default function InstagramFeed() {
   const [data, setData] = useState(null); // { profile, posts } once loaded
+  const containerRef = useRef(null);
+  const setRef = useRef(null); // spans just one copy of the posts, used to measure its real width
+  const [repeatCount, setRepeatCount] = useState(2);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,8 +113,37 @@ export default function InstagramFeed() {
 
   const profile = data?.profile?.handle ? data.profile : FALLBACK_PROFILE;
   const posts = data?.posts ?? [];
-  // The strip is drawn twice so the scroll loops without a gap
-  const loop = [...posts, ...posts];
+
+  // The strip is duplicated so the scroll can loop without a visible seam, but a
+  // fixed 2 copies only covers the screen when there are enough posts to fill it
+  // twice over. With few posts (or a very wide screen), the duplicated content
+  // runs out partway through the loop and the rest of the row goes blank - which
+  // is the empty space on the right. Keep enough copies on hand to always cover it.
+  useEffect(() => {
+    if (!posts.length) return undefined;
+    const container = containerRef.current;
+    const setEl = setRef.current;
+    if (!container || !setEl) return undefined;
+
+    const recalc = () => {
+      const setWidth = setEl.scrollWidth;
+      const containerWidth = container.clientWidth;
+      if (!setWidth || !containerWidth) return;
+      // Keep at least 2 full container-widths of content ahead of the viewport at all times
+      const needed = Math.ceil((containerWidth * 2) / setWidth) + 1;
+      setRepeatCount(Math.min(Math.max(needed, 2), 12));
+    };
+
+    recalc();
+
+    if (typeof ResizeObserver === 'undefined') return undefined;
+    const observer = new ResizeObserver(recalc);
+    observer.observe(container);
+    observer.observe(setEl);
+    return () => observer.disconnect();
+  }, [posts.length]);
+
+  const shiftPercent = 100 / repeatCount;
 
   return (
     <section className="bg-white py-12 md:py-16 text-[#111111] border-t border-[#EAE6DF]">
@@ -113,19 +165,44 @@ export default function InstagramFeed() {
       {data === null ? (
         <div className="h-[300px]" />
       ) : posts.length ? (
-        <div className="overflow-hidden">
+        <div ref={containerRef} className="overflow-hidden">
           <style>{`
-            @keyframes insta-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-            .insta-track { animation: insta-scroll var(--insta-duration) linear infinite; }
+            @keyframes insta-scroll {
+              from { transform: translate3d(0, 0, 0); }
+              to { transform: translate3d(var(--insta-shift), 0, 0); }
+            }
+            .insta-track {
+              animation: insta-scroll var(--insta-duration) linear infinite;
+              /* Promotes the track to its own GPU compositor layer so the browser can
+                 slide it without re-painting on every frame - this is what actually
+                 keeps the scroll buttery instead of stuttering under load. */
+              will-change: transform;
+              backface-visibility: hidden;
+              -webkit-backface-visibility: hidden;
+            }
             .insta-track:hover { animation-play-state: paused; }
             @media (prefers-reduced-motion: reduce) { .insta-track { animation: none; } }
           `}</style>
           <div
             className="insta-track flex w-max gap-2.5"
-            style={{ '--insta-duration': `${Math.max(posts.length * 6, 20)}s` }}
+            style={{
+              // One cycle always slides by exactly one set's width (-insta-shift),
+              // regardless of how many extra copies are rendered for coverage -
+              // so duration only needs to scale with the post count, not repeatCount.
+              '--insta-duration': `${Math.max(posts.length * 6, 20)}s`,
+              '--insta-shift': `-${shiftPercent}%`,
+            }}
           >
-            {loop.map((post, index) => (
-              <PostTile key={`${post._id}-${index}`} post={post} />
+            {Array.from({ length: repeatCount }).map((_, setIndex) => (
+              <div
+                key={setIndex}
+                ref={setIndex === 0 ? setRef : undefined}
+                className="flex gap-2.5 shrink-0"
+              >
+                {posts.map((post) => (
+                  <PostTile key={`${setIndex}-${post._id}`} post={post} />
+                ))}
+              </div>
             ))}
           </div>
         </div>

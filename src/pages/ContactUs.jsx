@@ -1,26 +1,50 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle2 } from 'lucide-react';
+import { postJson } from '../api';
+
+const EMPTY_FORM = {
+  fullName: '',
+  email: '',
+  phone: '',
+  inquiryType: 'General Inquiries',
+  message: '',
+  website: '', // honeypot: hidden from people, bots fill it in
+};
 
 export default function ContactUs() {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    inquiryType: 'General Inquiries',
-    message: '',
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // Sends the message to the backend; it shows up in the dashboard under "Messages"
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError('');
+    try {
+      await postJson('/contact', {
+        fullName: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        subject: formData.inquiryType,
+        message: formData.message.trim(),
+        website: formData.website,
+      });
+      setFormData(EMPTY_FORM);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -224,12 +248,33 @@ export default function ContactUs() {
                   />
                 </div>
 
+                {/* Honeypot: off-screen and skipped by keyboard/screen readers, so only bots fill it */}
+                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <label htmlFor="website">Website</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {error && (
+                  <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700 font-serif">
+                    {error}
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-[#111111] text-white hover:bg-[#D4AF37] hover:text-black py-4 text-[11px] uppercase font-bold tracking-[0.25em] transition-colors flex items-center justify-center gap-3 cursor-pointer group"
+                  disabled={sending}
+                  className="w-full bg-[#111111] text-white hover:bg-[#D4AF37] hover:text-black py-4 text-[11px] uppercase font-bold tracking-[0.25em] transition-colors flex items-center justify-center gap-3 cursor-pointer group disabled:cursor-wait disabled:opacity-70"
                 >
                   <Send size={14} className="text-[#D4AF37] group-hover:text-black transition-colors" />
-                  <span>Submit Inquiry</span>
+                  <span>{sending ? 'Sending…' : 'Submit Inquiry'}</span>
                 </button>
               </form>
             )}

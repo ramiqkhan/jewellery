@@ -10,8 +10,8 @@ import InstagramFeed from '../component/InstagramFeed';
 export default function Home() {
   return (
     <div className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
-      <VideoBanner />
       <Categories />
+      <VideoBanner />
       <BestSellers />
       {/* <Heritage /> */}
       <CustomerReviews />
