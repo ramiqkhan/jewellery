@@ -4,14 +4,22 @@ import { Volume2, VolumeX } from 'lucide-react';
 
 const UNLOCK_EVENTS = ['pointerdown', 'keydown', 'touchstart'];
 
+// Keep the hero from becoming absurdly tall on a very wide/short video + a tall viewport
+const MAX_HEIGHT_RATIO = 0.75; // fraction of window height
+
 export default function VideoBanner() {
   const videoRef = useRef(null);
+  const wrapperRef = useRef(null);
   // Sound is on from the start
   const [isMuted, setIsMuted] = useState(false);
   // The video's real width/height ratio, read once its metadata loads - sizing the
   // frame to this exact ratio is what lets the video show in full with no cropping
   // and no empty letterbox bars, instead of guessing a fixed box and cutting into it.
   const [aspectRatio, setAspectRatio] = useState(null);
+  // The box's actual rendered size in px. Computed in JS (not plain CSS max-height)
+  // so that when the height cap kicks in, the width shrinks to match it - the box's
+  // shape never drifts away from the video's real ratio, which is what was cropping it.
+  const [boxSize, setBoxSize] = useState(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -27,6 +35,30 @@ export default function VideoBanner() {
     video.addEventListener('loadedmetadata', readAspectRatio);
     return () => video.removeEventListener('loadedmetadata', readAspectRatio);
   }, []);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return undefined;
+
+    const recalc = () => {
+      const ratio = aspectRatio ?? 21 / 9;
+      const availableWidth = wrapper.clientWidth;
+      const maxHeight = window.innerHeight * MAX_HEIGHT_RATIO;
+      // Fit to whichever dimension runs out first, deriving the other from the ratio -
+      // so width and height are never set independently of each other.
+      const width = Math.min(availableWidth, maxHeight * ratio);
+      setBoxSize({ width, height: width / ratio });
+    };
+
+    recalc();
+    const observer = new ResizeObserver(recalc);
+    observer.observe(wrapper);
+    window.addEventListener('resize', recalc);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', recalc);
+    };
+  }, [aspectRatio]);
 
   // Browsers may block autoplay with sound until the visitor interacts with the page.
   // If that happens, fall back to muted playback and turn the sound on at the first
@@ -84,54 +116,62 @@ export default function VideoBanner() {
 
   return (
     <section className="w-full bg-[#FCFCFB] px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      {/* Framed video card: the box is sized to the video's real aspect ratio (falling
-          back to a sane 21:9 guess until that's known) so the video shows in full -
-          no cropping and no empty letterbox bars - rather than forcing a fixed shape. */}
-      <div
-        className="relative w-full max-w-[1600px] mx-auto overflow-hidden rounded-2xl bg-black"
-        style={{ aspectRatio: aspectRatio ?? 21 / 9, maxHeight: '75vh' }}
-      >
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted={isMuted}
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+      {/* Width-measuring wrapper: the inner card is sized in JS to boxSize so it
+          always keeps the video's real aspect ratio, however wide this gets. */}
+      <div ref={wrapperRef} className="w-full max-w-[1600px] mx-auto">
+        {/* Framed video card: sized to the video's real aspect ratio (falling back to
+            a sane 21:9 guess until that's known) so the video shows in full - no
+            cropping and no empty letterbox bars - rather than forcing a fixed shape. */}
+        <div
+          className="relative mx-auto overflow-hidden rounded-2xl bg-black"
+          style={
+            boxSize
+              ? { width: boxSize.width, height: boxSize.height }
+              : { width: '100%', aspectRatio: aspectRatio ?? 21 / 9 }
+          }
         >
-          {/* Local video served from /public/vid.mp4 */}
-          <source src="/vid.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-
-        {/* Cinematic Gradient / Dark Overlay for readability */}
-        <div className="absolute inset-0 bg-black/30 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
-
-        {/* Content Container */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-white text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-[0.15em] uppercase mb-5 drop-shadow-lg">
-            WEAR IT EVERYWHERE
-          </h1>
-
-          <Link
-            to="/new-arrivals"
-            className="bg-white text-[#1A1A1A] text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-[#D4AF37] transition-colors"
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted={isMuted}
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
           >
-            Shop Now
-          </Link>
-        </div>
+            {/* Local video served from /public/vid3.mp4 */}
+            <source src="/vid2.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
 
-        {/* Sound Toggle */}
-        <button
-          type="button"
-          onClick={toggleSound}
-          aria-label={isMuted ? 'Turn video sound on' : 'Turn video sound off'}
-          aria-pressed={!isMuted}
-          className="absolute bottom-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-sm border border-white/30 text-white px-3 py-2 text-[10px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-black transition-colors"
-        >
-          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          <span className="hidden sm:inline">{isMuted ? 'Sound Off' : 'Sound On'}</span>
-        </button>
+          {/* Cinematic Gradient / Dark Overlay for readability */}
+          <div className="absolute inset-0 bg-black/30 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+
+          {/* Content Container */}
+          <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+            <h1 className="text-white text-2xl sm:text-4xl md:text-5xl font-serif font-light tracking-[0.15em] uppercase mb-5 drop-shadow-lg">
+              WEAR IT EVERYWHERE
+            </h1>
+
+            <Link
+              to="/new-arrivals"
+              className="bg-white text-[#1A1A1A] text-[11px] md:text-xs font-semibold tracking-[0.2em] uppercase px-7 py-3.5 hover:bg-[#D4AF37] transition-colors"
+            >
+              Shop Now
+            </Link>
+          </div>
+
+          {/* Sound Toggle */}
+          <button
+            type="button"
+            onClick={toggleSound}
+            aria-label={isMuted ? 'Turn video sound on' : 'Turn video sound off'}
+            aria-pressed={!isMuted}
+            className="absolute bottom-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-sm border border-white/30 text-white px-3 py-2 text-[10px] uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:border-[#D4AF37] hover:text-black transition-colors"
+          >
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            <span className="hidden sm:inline">{isMuted ? 'Sound Off' : 'Sound On'}</span>
+          </button>
+        </div>
       </div>
     </section>
   );
