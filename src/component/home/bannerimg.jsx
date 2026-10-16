@@ -1,48 +1,37 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import zeloraBanner from '../../assets/Zelora Web Banner.jpg.jpeg';
+// import zeloraBanner from '../../assets/Zelora Web Banner.jpg.jpeg';
+import banner from '../../assets/banner.jpeg';
 import banner2 from '../../assets/banner2.jpeg';
 import banner3 from '../../assets/banner3.jpeg';
+import banner5 from '../../assets/banner5.jpeg';
 import banner6 from '../../assets/banner6.jpeg';
 
-// All the hero banner images. `banner.jpeg` is skipped - it's an empty 0-byte file
-// on disk. `banner5.jpeg` is skipped too - it's byte-for-byte identical to
-// banner3.jpeg, so showing both would just repeat the same slide.
+// All the hero banner images, all the same 1080x1440 shot (same person, same shoot).
+// Note: banner3.jpeg and banner5.jpeg are byte-for-byte identical files right now,
+// so this will show that same photo twice in the rotation - not a bug, just flagging
+// it in case one of them was meant to be swapped for a different shot.
 //
 // `ratio` is each image's real width/height (known exactly - these are fixed,
 // bundled files, not something that varies at runtime like a video). The carousel
 // box is sized in JS to match whichever slide is active, so object-cover never has
 // anything to crop: a box shaped exactly like its image shows that image in full.
+const PORTRAIT_RATIO = 1080 / 1440;
+
 const SLIDES = [
-  {
-    image: zeloraBanner,
-    alt: 'Zelora - Timeless Elegance, Always. Premium quality, trusted authenticity, luxury packaging, timeless designs.',
-    to: '/new-arrivals',
-    overlay: false, // this graphic already has the logo, tagline and CTA baked in
-    ratio: 1500 / 500,
-  },
-  {
-    image: banner2,
-    alt: 'Zelora jewellery, styled',
-    to: '/new-arrivals',
-    overlay: true,
-    ratio: 1080 / 1440,
-  },
-  {
-    image: banner3,
-    alt: 'Zelora jewellery, styled',
-    to: '/new-arrivals',
-    overlay: true,
-    ratio: 1080 / 1440,
-  },
-  {
-    image: banner6,
-    alt: 'Zelora jewellery, styled',
-    to: '/new-arrivals',
-    overlay: true,
-    ratio: 1080 / 1440,
-  },
+  // {
+  //   image: zeloraBanner,
+  //   alt: 'Zelora - Timeless Elegance, Always. Premium quality, trusted authenticity, luxury packaging, timeless designs.',
+  //   to: '/new-arrivals',
+  //   overlay: false, // this graphic already has the logo, tagline and CTA baked in
+  //   ratio: 1500 / 500,
+  // },
+  { image: banner, alt: 'Zelora jewellery, styled', to: '/new-arrivals', overlay: true, ratio: PORTRAIT_RATIO },
+  { image: banner2, alt: 'Zelora jewellery, styled', to: '/new-arrivals', overlay: true, ratio: PORTRAIT_RATIO },
+  { image: banner3, alt: 'Zelora jewellery, styled', to: '/new-arrivals', overlay: true, ratio: PORTRAIT_RATIO },
+  { image: banner5, alt: 'Zelora jewellery, styled', to: '/new-arrivals', overlay: true, ratio: PORTRAIT_RATIO },
+  { image: banner6, alt: 'Zelora jewellery, styled', to: '/new-arrivals', overlay: true, ratio: PORTRAIT_RATIO },
 ];
 
 const AUTO_ADVANCE_MS = 5000;
@@ -104,8 +93,11 @@ export default function BannerImg() {
           onMouseLeave={() => setIsPaused(false)}
         >
           {SLIDES.map((slide, i) => (
+            // Keyed by position, not slide.image - banner3.jpeg and banner5.jpeg are
+            // byte-identical right now, so Vite can hash them to the same output URL,
+            // which would make slide.image collide as a React key.
             <Link
-              key={slide.image}
+              key={i}
               to={slide.to}
               aria-label={slide.alt}
               aria-hidden={i !== index}
@@ -159,7 +151,7 @@ export default function BannerImg() {
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
             {SLIDES.map((slide, i) => (
               <button
-                key={slide.image}
+                key={i}
                 type="button"
                 onClick={() => goTo(i)}
                 aria-label={`Go to slide ${i + 1}`}
