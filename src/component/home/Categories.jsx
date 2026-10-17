@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 
+
+import BannerImg from "../../assets/banner8.jpg";
+import BannerImg2 from "../../assets/banner2.jpeg";
+import BannerImg3 from "../../assets/banner7.jpg";
 export default function FeaturedCollections() {
   return (
     <section className="w-full bg-white py-16 md:py-24 text-[#111111] px-4 md:px-8 antialiased">
@@ -42,7 +46,7 @@ export default function FeaturedCollections() {
               className="group relative bg-[#F5F5F3] border border-[#EAE6DF] rounded-2xl h-[360px] p-6 flex flex-col justify-end overflow-hidden hover:border-[#D4AF37] transition-all duration-500 cursor-pointer block"
             >
               <img
-                src="https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800"
+                src={BannerImg}
                 alt="Shop Necklaces"
                 className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700 ease-out"
               />
@@ -69,7 +73,7 @@ export default function FeaturedCollections() {
               className="group relative bg-[#F5F5F3] border border-[#EAE6DF] rounded-2xl h-[360px] p-6 flex flex-col justify-end overflow-hidden hover:border-[#D4AF37] transition-all duration-500 cursor-pointer block"
             >
               <img
-                src="https://images.unsplash.com/photo-1611591471171-a1314efea44d?auto=format&fit=crop&q=80&w=800"
+                src={BannerImg2}
                 alt="Shop Bracelets"
                 className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700 ease-out"
               />
@@ -100,7 +104,7 @@ export default function FeaturedCollections() {
             className="group relative bg-[#F5F5F3] border border-[#EAE6DF] rounded-2xl h-[480px] lg:h-full min-h-[500px] p-8 flex flex-col justify-end overflow-hidden hover:border-[#D4AF37] transition-all duration-500 cursor-pointer block"
           >
             <img
-              src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=1200"
+              src={BannerImg3}
               alt="New Release"
               className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-95 group-hover:scale-[1.03] transition-all duration-700 ease-out"
             />
