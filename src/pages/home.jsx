@@ -1,7 +1,7 @@
 import React from 'react';
 // import BannerImg from '../component/home/bannerimg';
 import VideoBanner from '../component/home/bannervid';
-import ValueProps from '../component/home/ValueProps';
+// import ValueProps from '../component/home/ValueProps';
 import Categories from '../component/home/Categories';
 import BestSellers from '../component/home/BestSellers';
 // import Heritage from '../component/home/Heritage';
@@ -19,7 +19,7 @@ export default function Home() {
       {/* <Heritage /> */}
       <CustomerReviews />
       <InstagramFeed />
-      <ValueProps />
+      {/* <ValueProps /> */}
     </div>
   );
 }
