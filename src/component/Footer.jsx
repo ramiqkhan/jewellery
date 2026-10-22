@@ -24,7 +24,7 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email address..."
-              className="bg-[#1A1A1A] border border-[#333333] px-5 py-3.5 text-xs text-white placeholder-gray-500 tracking-wide focus:outline-none focus:border-[#D4AF37] flex-1 transition-colors"
+              className="bg-[#1A1A1A] border border-[#333333] px-5 py-3.5 text-base md:text-xs text-white placeholder-gray-500 tracking-wide focus:outline-none focus:border-[#D4AF37] flex-1 transition-colors"
             />
             <button className="bg-white text-[#111111] px-8 py-3.5 text-[11px] font-semibold tracking-[0.25em] uppercase hover:bg-[#D4AF37] hover:text-white transition-all flex items-center justify-center space-x-2">
               <span>Subscribe</span>

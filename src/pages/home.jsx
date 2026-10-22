@@ -7,6 +7,7 @@ import BestSellers from '../component/home/BestSellers';
 // import Heritage from '../component/home/Heritage';
 import CustomerReviews from '../component/CustomerReviews';
 import InstagramFeed from '../component/InstagramFeed';
+import GenderCollections from '../component/home/GenderCollections';
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Categories />
       
       <BestSellers />
+      <GenderCollections />
       {/* <Heritage /> */}
       <CustomerReviews />
       <InstagramFeed />
