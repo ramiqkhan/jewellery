@@ -19,8 +19,6 @@ export default function BestSellers() {
   const [addedToCart, setAddedToCart] = useState({});
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
-  // Pull the newest active products for this teaser - there is no "bestseller" flag
-  // in the backend yet, so this is "what's newest", not actual sales data.
   const load = () => {
     setLoading(true);
     setError('');
@@ -39,7 +37,7 @@ export default function BestSellers() {
 
   const handleAddToCart = (product, e) => {
     e.stopPropagation();
-    quickAdd(product); // adds directly, or sends to the product page if a size is needed
+    quickAdd(product);
 
     if (!(product.sizes?.length > 0)) {
       setAddedToCart((prev) => ({ ...prev, [product._id]: true }));
@@ -58,8 +56,6 @@ export default function BestSellers() {
     navigate(`/product/${product.slug || product._id}`);
   };
 
-  // No single "jewellery" category exists on the backend (only rings, necklaces,
-  // earrings, bracelets, watches) - so "Jewellery" here just means "not Watches".
   const filteredProducts = products
     .filter((product) =>
       activeCategory === 'all'
@@ -71,11 +67,11 @@ export default function BestSellers() {
     .slice(0, 4);
 
   return (
-    <section className="bg-white py-20 px-6 md:px-12 text-[#111111] relative overflow-hidden antialiased">
+    <section className="bg-white py-16 md:py-20 px-4 sm:px-6 md:px-12 text-[#111111] relative overflow-hidden antialiased">
       <div className="max-w-7xl mx-auto relative z-10">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 pb-6 border-b border-[#F2F2F2] gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 sm:mb-12 pb-6 border-b border-[#F2F2F2] gap-6">
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2 flex items-center gap-2">
               <Sparkles size={12} /> Curated Masterpieces
@@ -89,7 +85,7 @@ export default function BestSellers() {
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={() => setActiveCategory('all')}
-              className={`px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 cursor-pointer ${
+              className={`px-4 sm:px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 cursor-pointer ${
                 activeCategory === 'all'
                   ? 'bg-[#111111] text-white'
                   : 'bg-[#F9F8F6] text-gray-600 hover:bg-[#111111] hover:text-white'
@@ -99,7 +95,7 @@ export default function BestSellers() {
             </button>
             <button
               onClick={() => setActiveCategory('watches')}
-              className={`px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 sm:px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
                 activeCategory === 'watches'
                   ? 'bg-[#111111] text-white'
                   : 'bg-[#F9F8F6] text-gray-600 hover:bg-[#111111] hover:text-white'
@@ -110,7 +106,7 @@ export default function BestSellers() {
             </button>
             <button
               onClick={() => setActiveCategory('jewellery')}
-              className={`px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 cursor-pointer ${
+              className={`px-4 sm:px-5 py-2 text-[10px] uppercase tracking-[0.2em] font-medium transition-all duration-300 cursor-pointer ${
                 activeCategory === 'jewellery'
                   ? 'bg-[#111111] text-white'
                   : 'bg-[#F9F8F6] text-gray-600 hover:bg-[#111111] hover:text-white'
@@ -143,9 +139,9 @@ export default function BestSellers() {
           <p className="py-16 text-center text-sm text-gray-400">No products available right now.</p>
         )}
 
-        {/* Product Cards Grid */}
+        {/* Product Cards Grid: 2 Columns on Mobile */}
         {!loading && filteredProducts.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
             {filteredProducts.map((product) => (
               <div
                 key={product._id}
@@ -156,7 +152,7 @@ export default function BestSellers() {
                 <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F3]">
                   {/* Badge */}
                   {product.badge && (
-                    <span className="absolute top-3 left-3 bg-[#111111] text-white text-[9px] font-semibold tracking-wider px-2 py-0.5 z-10">
+                    <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
                       {product.badge}
                     </span>
                   )}
@@ -164,11 +160,11 @@ export default function BestSellers() {
                   {/* Wishlist Button */}
                   <button
                     onClick={(e) => toggleWishlist(product._id, e)}
-                    className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
+                    className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
                     aria-label="Save to Wishlist"
                   >
                     <Heart
-                      size={14}
+                      size={13}
                       className={
                         wishlist[product._id]
                           ? 'fill-red-500 text-red-500'
@@ -191,8 +187,8 @@ export default function BestSellers() {
                     </div>
                   )}
 
-                  {/* Hover Quick Action Drawer */}
-                  <div className="absolute inset-x-0 bottom-0 p-3 bg-white/95 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2 border-t border-[#EAE6DF]">
+                  {/* Hover Quick Action Drawer (Desktop) */}
+                  <div className="hidden sm:flex absolute inset-x-0 bottom-0 p-3 bg-white/95 backdrop-blur-md translate-y-full group-hover:translate-y-0 transition-transform duration-300 items-center gap-2 border-t border-[#EAE6DF]">
                     <button
                       onClick={(e) => handleAddToCart(product, e)}
                       className="flex-1 bg-[#111111] text-white py-2.5 text-[9px] font-semibold tracking-[0.25em] uppercase hover:bg-[#D4AF37] hover:text-black transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
@@ -220,12 +216,12 @@ export default function BestSellers() {
                 </div>
 
                 {/* Product Info Block */}
-                <div className="pt-3.5 flex flex-col justify-start">
-                  <h3 className="text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
+                <div className="pt-2.5 sm:pt-3.5 flex flex-col justify-start">
+                  <h3 className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
                     {product.name}
                   </h3>
 
-                  <div className="mt-1 flex items-center gap-2 text-[12px]">
+                  <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-[12px]">
                     <span className="font-semibold text-[#111111]">{formatPrice(product.price)}</span>
                   </div>
                 </div>

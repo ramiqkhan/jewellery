@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, ShoppingBag, ArrowUpRight } from 'lucide-react';
+import { Heart, ArrowUpRight } from 'lucide-react';
 
 const GENDER_PRODUCTS = [
   // Men's Collection
@@ -95,11 +95,11 @@ export default function GenderProductDisplay() {
   );
 
   return (
-    <section className="bg-white py-16 md:py-24 px-6 md:px-12 text-[#111111] antialiased">
+    <section className="bg-white py-12 md:py-24 px-4 sm:px-6 md:px-12 text-[#111111] antialiased">
       <div className="max-w-7xl mx-auto">
         
-        {/* Simple Header & Gender Selector */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 pb-6 border-b border-[#EAE6DF] gap-6">
+        {/* Header & Gender Switcher */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 md:mb-10 pb-6 border-b border-[#EAE6DF] gap-4">
           <div>
             <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2">
               Curated Catalog
@@ -109,11 +109,11 @@ export default function GenderProductDisplay() {
             </h2>
           </div>
 
-          {/* Men / Women Switcher */}
-          <div className="flex items-center gap-2 border border-[#EAE6DF] p-1 bg-[#FAF9F6]">
+          {/* Switcher */}
+          <div className="flex items-center gap-2 border border-[#EAE6DF] p-1 bg-[#FAF9F6] w-full sm:w-auto">
             <button
               onClick={() => setActiveGender('men')}
-              className={`px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
+              className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
                 activeGender === 'men'
                   ? 'bg-[#111111] text-white shadow-xs'
                   : 'text-gray-500 hover:text-[#111111]'
@@ -123,7 +123,7 @@ export default function GenderProductDisplay() {
             </button>
             <button
               onClick={() => setActiveGender('women')}
-              className={`px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
+              className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
                 activeGender === 'women'
                   ? 'bg-[#111111] text-white shadow-xs'
                   : 'text-gray-500 hover:text-[#111111]'
@@ -134,8 +134,8 @@ export default function GenderProductDisplay() {
           </div>
         </div>
 
-        {/* Clean Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 2-Column Mobile Grid Layout */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
           {filteredProducts.map((product) => (
             <div
               key={product.id}
@@ -145,18 +145,18 @@ export default function GenderProductDisplay() {
               {/* Image Frame */}
               <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F3]">
                 {product.discount && (
-                  <span className="absolute top-3 left-3 bg-[#111111] text-white text-[9px] font-semibold tracking-wider px-2 py-0.5 z-10">
+                  <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
                     {product.discount}
                   </span>
                 )}
 
                 <button
                   onClick={(e) => toggleWishlist(product.id, e)}
-                  className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
+                  className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
                   aria-label="Save to Wishlist"
                 >
                   <Heart
-                    size={14}
+                    size={13}
                     className={
                       wishlist[product.id]
                         ? 'fill-red-500 text-red-500'
@@ -174,15 +174,15 @@ export default function GenderProductDisplay() {
               </div>
 
               {/* Minimal Product Details */}
-              <div className="pt-3.5 flex flex-col justify-start">
-                <h3 className="text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
+              <div className="pt-2.5 sm:pt-3.5 flex flex-col justify-start">
+                <h3 className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
                   {product.name}
                 </h3>
                 
-                <div className="mt-1 flex items-center justify-between text-[12px]">
-                  <div className="flex items-center gap-2">
+                <div className="mt-1 flex items-center justify-between text-[11px] sm:text-[12px]">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                     {product.originalPrice && (
-                      <span className="text-gray-400 line-through font-light">
+                      <span className="text-gray-400 line-through font-light text-[10px] sm:text-[11px]">
                         {product.originalPrice}
                       </span>
                     )}
@@ -191,7 +191,7 @@ export default function GenderProductDisplay() {
                     </span>
                   </div>
 
-                  <span className="text-[9px] uppercase tracking-[0.15em] text-gray-400 group-hover:text-[#D4AF37] transition-colors flex items-center gap-0.5">
+                  <span className="hidden sm:flex text-[9px] uppercase tracking-[0.15em] text-gray-400 group-hover:text-[#D4AF37] transition-colors items-center gap-0.5">
                     View <ArrowUpRight size={11} />
                   </span>
                 </div>

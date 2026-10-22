@@ -144,7 +144,7 @@ export default function Footer() {
             <ul className="space-y-3 text-xs tracking-wider text-gray-400 font-serif">
               <li className="flex items-center space-x-2.5">
                 <Phone size={14} className="text-[#D4AF37]" />
-                <span>+92 21 111 222 333</span>
+                <span>+92 3252984520</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Mail size={14} className="text-[#D4AF37]" />
