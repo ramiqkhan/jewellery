@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Context/CartContext';
+import { payablePrice } from '../utils/pricing';
 
 // "Quick add" from a product grid card. Products that come in sizes can't be added
 // without picking one, so those go to the product page instead of straight into the bag.
@@ -17,7 +18,8 @@ export function useQuickAdd() {
       id: product._id,
       productId: product._id,
       title: product.name,
-      price: product.price,
+      // The discounted price if one is running right now, not the pre-sale price
+      price: payablePrice(product),
       image: product.images?.[0]?.url || '',
       size: '',
       quantity: 1,

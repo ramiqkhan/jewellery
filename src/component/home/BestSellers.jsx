@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, ShoppingBag, Eye, X, Check, Watch, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 import { getProducts } from '../../api';
 import { useQuickAdd } from '../../hooks/useQuickAdd';
-
-const formatPrice = (value) => `PKR ${Number(value || 0).toLocaleString()}`;
+import { formatPrice, getPricing } from '../../utils/pricing';
 
 export default function BestSellers() {
   const navigate = useNavigate();
@@ -142,7 +141,9 @@ export default function BestSellers() {
         {/* Product Cards Grid: 2 Columns on Mobile */}
         {!loading && filteredProducts.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product) => {
+              const pricing = getPricing(product);
+              return (
               <div
                 key={product._id}
                 onClick={() => handleNavigateToProduct(product)}
@@ -151,9 +152,9 @@ export default function BestSellers() {
                 {/* Product Image Frame */}
                 <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F3]">
                   {/* Badge */}
-                  {product.badge && (
+                  {(pricing.onSale || product.badge) && (
                     <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
-                      {product.badge}
+                      {pricing.onSale ? `-${pricing.percent}%` : product.badge}
                     </span>
                   )}
 
@@ -222,11 +223,17 @@ export default function BestSellers() {
                   </h3>
 
                   <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-[12px]">
-                    <span className="font-semibold text-[#111111]">{formatPrice(product.price)}</span>
+                    {pricing.onSale && (
+                      <span className="text-gray-400 line-through font-light text-[10px] sm:text-[11px]">
+                        {formatPrice(pricing.originalPrice)}
+                      </span>
+                    )}
+                    <span className="font-semibold text-[#111111]">{formatPrice(pricing.finalPrice)}</span>
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -258,9 +265,11 @@ export default function BestSellers() {
 
             <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between bg-white">
               <div>
-                {quickViewProduct.badge && (
+                {(getPricing(quickViewProduct).onSale || quickViewProduct.badge) && (
                   <span className="text-[9px] uppercase tracking-[0.3em] text-[#D4AF37] font-semibold">
-                    {quickViewProduct.badge}
+                    {getPricing(quickViewProduct).onSale
+                      ? `-${getPricing(quickViewProduct).percent}% OFF`
+                      : quickViewProduct.badge}
                   </span>
                 )}
                 <h3 className="text-lg font-serif text-[#111111] tracking-wider uppercase mt-1 mb-2">
@@ -279,9 +288,16 @@ export default function BestSellers() {
               </div>
 
               <div>
-                <p className="text-base font-semibold text-[#111111] mb-4">
-                  {formatPrice(quickViewProduct.price)}
-                </p>
+                <div className="flex items-baseline gap-2 mb-4">
+                  {getPricing(quickViewProduct).onSale && (
+                    <span className="text-sm text-gray-400 line-through font-light">
+                      {formatPrice(getPricing(quickViewProduct).originalPrice)}
+                    </span>
+                  )}
+                  <p className="text-base font-semibold text-[#111111]">
+                    {formatPrice(getPricing(quickViewProduct).finalPrice)}
+                  </p>
+                </div>
                 <div className="flex gap-2">
                   <button
                     onClick={(e) => handleAddToCart(quickViewProduct, e)}

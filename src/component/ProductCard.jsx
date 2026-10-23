@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag, ImageOff, Eye } from 'lucide-react';
 import ProductQuickView from './ProductQuickView';
-
-const formatPrice = (value) => Number(value || 0).toLocaleString();
+import { formatPrice, getPricing } from '../utils/pricing';
 
 const isOutOfStock = (product) =>
   product.sizes?.length > 0
@@ -42,11 +41,7 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
     ? Math.min(...product.sizes.map((s) => s.stock ?? 0)) <= 3
     : (product.stock ?? 0) <= 3);
 
-  // Supports a future "compareAtPrice" field if one is ever added to the backend;
-  // today's Product schema only has `price`, so this quietly does nothing yet.
-  const compareAtPrice = product.compareAtPrice;
-  const hasDiscount = compareAtPrice > product.price;
-  const discountPercent = hasDiscount ? Math.round(100 - (product.price / compareAtPrice) * 100) : null;
+  const { onSale, originalPrice, finalPrice, percent } = getPricing(product);
 
   const quickBuyLabel = product.sizes?.length > 0 ? 'Select size' : 'Quick buy';
 
@@ -54,9 +49,9 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
     <>
       <article className="group flex flex-col">
         <div className="relative bg-[#F4F2EE] aspect-square overflow-hidden rounded-lg mb-5 border border-[#EAE6DF] shadow-sm transition-all duration-300 group-hover:shadow-[0_18px_40px_-16px_rgba(26,26,26,0.35)] group-hover:border-[#D4AF37]/60">
-          {(discountPercent || isDisplayableBadge(product.badge)) && (
+          {(onSale || isDisplayableBadge(product.badge)) && (
             <span className="absolute top-3 left-3 bg-[#1A1A1A] text-[#D4AF37] text-[9px] font-semibold tracking-[0.15em] uppercase px-2.5 py-1.5 rounded-sm z-10 pointer-events-none shadow-sm">
-              {discountPercent ? `-${discountPercent}%` : product.badge}
+              {onSale ? `-${percent}%` : product.badge}
             </span>
           )}
 
@@ -158,11 +153,11 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
 
           <p className="text-[8px] uppercase tracking-[0.2em] text-gray-400 mt-3 mb-0.5">Price</p>
           <div className="flex items-baseline gap-2">
-            {hasDiscount && (
-              <span className="text-xs text-gray-400 line-through">PKR {formatPrice(compareAtPrice)}</span>
+            {onSale && (
+              <span className="text-xs text-gray-400 line-through">{formatPrice(originalPrice)}</span>
             )}
             <span className="text-base font-semibold text-[#1A1A1A] tracking-wide">
-              PKR {formatPrice(product.price)}
+              {formatPrice(finalPrice)}
             </span>
           </div>
 

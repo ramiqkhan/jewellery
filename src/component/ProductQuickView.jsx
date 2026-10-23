@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { X, ShoppingBag } from 'lucide-react';
-
-const formatPrice = (value) => Number(value || 0).toLocaleString();
+import { formatPrice, getPricing } from '../utils/pricing';
 
 // Lightweight preview opened by the eye icon on a ProductCard - image, name,
 // price and an add-to-bag action, without leaving the grid.
 export default function ProductQuickView({ product, outOfStock, onAddToCart, onClose }) {
   const href = `/product/${product.slug || product._id}`;
   const image = product.images?.[0];
+  const { onSale, originalPrice, finalPrice, percent } = getPricing(product);
 
   return (
     <div
@@ -39,9 +39,9 @@ export default function ProductQuickView({ product, outOfStock, onAddToCart, onC
 
         <div className="w-full sm:w-1/2 p-6 flex flex-col justify-between">
           <div>
-            {product.badge && (
+            {(onSale || product.badge) && (
               <span className="text-[9px] uppercase tracking-[0.3em] text-[#D4AF37] font-semibold">
-                {product.badge}
+                {onSale ? `-${percent}% OFF` : product.badge}
               </span>
             )}
             <h3 className="text-base font-serif uppercase tracking-wide text-[#1A1A1A] mt-1 mb-2">
@@ -53,7 +53,10 @@ export default function ProductQuickView({ product, outOfStock, onAddToCart, onC
           </div>
 
           <div className="mt-6">
-            <p className="text-lg font-semibold text-[#1A1A1A] mb-4">PKR {formatPrice(product.price)}</p>
+            <div className="flex items-baseline gap-2 mb-4">
+              {onSale && <span className="text-sm text-gray-400 line-through">{formatPrice(originalPrice)}</span>}
+              <p className="text-lg font-semibold text-[#1A1A1A]">{formatPrice(finalPrice)}</p>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={onAddToCart}
