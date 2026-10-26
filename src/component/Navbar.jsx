@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Search, User, ShoppingBag, Menu, X, ChevronRight, Loader2 } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
 import { getSearchSuggestions } from '../api';
@@ -7,7 +7,6 @@ import { getSearchSuggestions } from '../api';
 const POPULAR_SEARCHES = ['Diamond Ring', 'Gold Chains', 'Pearl Earrings', 'Tennis Bracelet'];
 const formatPrice = (value) => `PKR ${Number(value || 0).toLocaleString()}`;
 
-// `to` is the route for the item; items without one are not built yet and stay as "#"
 const NAV_ITEMS = [
   { label: 'NEW ARRIVALS', to: '/new-arrivals', hasDropdown: true },
   { label: 'RINGS', to: '/rings', hasDropdown: false },
@@ -15,34 +14,32 @@ const NAV_ITEMS = [
   { label: 'EARRINGS', to: '/earrings', hasDropdown: false },
   { label: 'BRACELETS', to: '/bracelets', hasDropdown: false },
   { label: 'FINE JEWELLERY', to: '/fine-jewellery', hasDropdown: true, highlight: true },
-  { label: '80S COLLECTION', to: '/80s-collection', hasDropdown: false },
+  { label: 'MEN / WOMEN', to: '/#gender-collections', isHash: true, hasDropdown: false },
   { label: 'WATCHES', to: '/watches', hasDropdown: false },
 ];
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  // Search box state: typed query, live suggestions (GET /products/search/suggestions)
+  // Search box state
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState({ products: [], links: [] });
   const [suggestLoading, setSuggestLoading] = useState(false);
   const suggestDebounce = useRef(null);
 
-  // Connect to global cart context
   const { totalItems, setIsCartOpen } = useCart();
 
   useEffect(() => {
     if (suggestDebounce.current) clearTimeout(suggestDebounce.current);
-
     if (!query.trim()) {
       setSuggestions({ products: [], links: [] });
       setSuggestLoading(false);
       return;
     }
-
     setSuggestLoading(true);
     suggestDebounce.current = setTimeout(() => {
       getSearchSuggestions(query, 6)
@@ -61,18 +58,36 @@ export default function Navbar() {
     setIsSearchOpen(false);
   };
 
+  // Click handler for hash navigation (e.g. MEN / WOMEN)
+  const handleHashClick = (e, item) => {
+    if (item.isHash) {
+      e.preventDefault();
+      setIsMobileMenuOpen(false);
+
+      if (location.pathname === '/') {
+        // Already on home page -> scroll directly
+        const el = document.getElementById('gender-collections');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // On another page -> navigate home with hash
+        navigate('/#gender-collections');
+      }
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
       {/* Announcement Bar */}
       <div className="bg-black py-2 px-4 text-center">
         <p className="text-white text-xs tracking-widest font-medium">
-         Free delivery on orders above PKR 2999+ • USE CODE: LUXURY10
+          Free delivery on orders above PKR 2999+ • USE CODE: LUXURY10
         </p>
       </div>
 
       {/* Main Header Container */}
       <div className="flex items-center justify-between px-4 py-4 md:px-8">
-        {/* Left: Mobile Menu Trigger & Logo */}
         <div className="flex items-center space-x-4">
           <button
             className="xl:hidden p-1 text-black focus:outline-none"
@@ -94,24 +109,32 @@ export default function Navbar() {
           {NAV_ITEMS.map((item, index) => {
             const className = ({ isActive } = {}) =>
               `text-xs font-semibold tracking-wider pb-1 border-b-2 hover:border-black transition-colors ${
-                isActive ? 'border-[#D4AF37]' : 'border-transparent'
+                isActive && !item.isHash ? 'border-[#D4AF37]' : 'border-transparent'
               } ${item.highlight ? 'text-amber-700' : 'text-gray-900'}`;
 
-            return item.to ? (
+            if (item.isHash) {
+              return (
+                <a
+                  key={index}
+                  href="/#gender-collections"
+                  onClick={(e) => handleHashClick(e, item)}
+                  className="text-xs font-semibold tracking-wider pb-1 border-b-2 border-transparent hover:border-black text-gray-900 transition-colors cursor-pointer"
+                >
+                  {item.label}
+                </a>
+              );
+            }
+
+            return (
               <NavLink key={index} to={item.to} className={className}>
                 {item.label}
               </NavLink>
-            ) : (
-              <a key={index} href="#" className={className()}>
-                {item.label}
-              </a>
             );
           })}
         </nav>
 
-        {/* Right: User, Search & Global Cart Trigger */}
+        {/* Right: User, Search & Cart */}
         <div className="flex items-center space-x-4">
-          {/* User Profile Dropdown */}
           <div className="relative">
             <button
               className="p-2 text-black hover:opacity-70 transition-opacity"
@@ -140,7 +163,6 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Search Trigger */}
           <button
             className="p-2 text-black hover:opacity-70 transition-opacity"
             onClick={() => setIsSearchOpen(true)}
@@ -149,7 +171,6 @@ export default function Navbar() {
             <Search size={22} />
           </button>
 
-          {/* Global Cart Bag Trigger */}
           <button
             className="p-2 text-black hover:text-[#D4AF37] transition-colors relative"
             onClick={() => setIsCartOpen(true)}
@@ -181,26 +202,30 @@ export default function Navbar() {
                   const className = `text-sm font-semibold tracking-wide flex justify-between items-center py-2 border-b border-gray-100 ${
                     item.highlight ? 'text-amber-700' : 'text-gray-900'
                   }`;
-                  const content = (
-                    <>
-                      {item.label}
-                      {item.hasDropdown && <ChevronRight size={16} className="text-gray-400" />}
-                    </>
-                  );
 
-                  return item.to ? (
+                  if (item.isHash) {
+                    return (
+                      <a
+                        key={idx}
+                        href="/#gender-collections"
+                        onClick={(e) => handleHashClick(e, item)}
+                        className={className}
+                      >
+                        {item.label}
+                      </a>
+                    );
+                  }
+
+                  return (
                     <Link
                       key={idx}
                       to={item.to}
                       className={className}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {content}
+                      {item.label}
+                      {item.hasDropdown && <ChevronRight size={16} className="text-gray-400" />}
                     </Link>
-                  ) : (
-                    <a key={idx} href="#" className={className}>
-                      {content}
-                    </a>
                   );
                 })}
               </div>
@@ -233,7 +258,7 @@ export default function Navbar() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search rings, necklaces, bracelets..."
-                className="w-full text-base focus:outline-none bg-transparent"
+                className="w-full text-base md:text-xs focus:outline-none bg-transparent"
                 autoFocus
               />
               {suggestLoading && <Loader2 size={16} className="animate-spin text-gray-400 ml-2 shrink-0" />}
@@ -244,7 +269,6 @@ export default function Navbar() {
 
             {query.trim() ? (
               <div>
-                {/* Matching product thumbnails */}
                 {suggestions.products.length > 0 && (
                   <div className="space-y-1 mb-4">
                     {suggestions.products.map((product) => (
@@ -270,7 +294,6 @@ export default function Navbar() {
                   </div>
                 )}
 
-                {/* Matching navbar pages, e.g. typing "ring" links to the Rings page */}
                 {suggestions.links.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
                     {suggestions.links.map((link) => (

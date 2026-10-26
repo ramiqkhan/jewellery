@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Heart, ArrowUpRight, AlertCircle, Loader2 } from 'lucide-react';
 import { getProducts } from '../../api';
 import { formatPrice, getPricing } from '../../utils/pricing';
@@ -9,13 +9,15 @@ const GENDERS = [
   { value: 'women', label: "Women's" },
 ];
 
-// GET /api/products?gender=men|women - the backend also folds "unisex" pieces
-// into both, so this isn't a strict men-only/women-only split.
 export default function GenderCollections() {
   const navigate = useNavigate();
-  const [activeGender, setActiveGender] = useState('men');
-  const [wishlist, setWishlist] = useState({});
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Read active gender from URL parameter (defaulting to 'men' if unassigned)
+  const currentGenderParam = searchParams.get('gender');
+  const activeGender = currentGenderParam === 'women' ? 'women' : 'men';
 
+  const [wishlist, setWishlist] = useState({});
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,6 +33,11 @@ export default function GenderCollections() {
 
   useEffect(load, [activeGender]);
 
+  // Update URL parameter when user clicks a switcher button
+  const handleGenderChange = (genderValue) => {
+    setSearchParams({ gender: genderValue });
+  };
+
   const toggleWishlist = (id, e) => {
     e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -39,7 +46,10 @@ export default function GenderCollections() {
   const goToProduct = (product) => navigate(`/product/${product.slug || product._id}`);
 
   return (
-    <section className="bg-white py-12 md:py-24 px-4 sm:px-6 md:px-12 text-[#111111] antialiased">
+    <section 
+      id="gender-collections" 
+      className="bg-white py-12 md:py-24 px-4 sm:px-6 md:px-12 text-[#111111] antialiased scroll-mt-20"
+    >
       <div className="max-w-7xl mx-auto">
 
         {/* Header & Gender Switcher */}
@@ -53,12 +63,12 @@ export default function GenderCollections() {
             </h2>
           </div>
 
-          {/* Switcher */}
+          {/* Switcher Connected to URL Parameters */}
           <div className="flex items-center gap-2 border border-[#EAE6DF] p-1 bg-[#FAF9F6] w-full sm:w-auto">
             {GENDERS.map(({ value, label }) => (
               <button
                 key={value}
-                onClick={() => setActiveGender(value)}
+                onClick={() => handleGenderChange(value)}
                 className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
                   activeGender === value
                     ? 'bg-[#111111] text-white shadow-xs'
