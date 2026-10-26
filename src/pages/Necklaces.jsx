@@ -1,78 +1,114 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useProductList, SORT_OPTIONS } from '../hooks/useProductList';
-import { useQuickAdd } from '../hooks/useQuickAdd';
-import ProductGridSection from '../component/ProductGridSection';
+import React from 'react';
+import { Heart, ShoppingBag, Eye, Loader2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Necklaces() {
-  const { products, pagination, loading, error, sort, changeSort, page, setPage, reload } =
-    useProductList('necklaces');
-  const [wishlist, setWishlist] = useState({});
-  const quickAdd = useQuickAdd();
+const formatPrice = (value) => `PKR ${Number(value || 0).toLocaleString()}`;
 
-  const toggleWishlist = (id) => setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
+export default function ProductGridSection({
+  loading,
+  error,
+  reload,
+  products = [],
+  pagination,
+  page,
+  setPage,
+  wishlist = {},
+  toggleWishlist,
+  quickAdd,
+  resourceLabel = "piece",
+  emptyLabel = "No products found.",
+  gridClassName,
+}) {
+  const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className="py-16 flex items-center justify-center text-gray-400">
+        <Loader2 size={22} className="animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center gap-3 border border-red-200 bg-red-50 text-red-700 p-4 text-xs mb-10">
+        <AlertCircle size={16} className="shrink-0" />
+        <span className="flex-1">{error}</span>
+        <button onClick={reload} className="shrink-0 border border-red-300 px-3 py-1.5 hover:bg-red-100 transition-colors">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!products.length) {
+    return <p className="py-16 text-center text-sm text-gray-400">{emptyLabel}</p>;
+  }
 
   return (
-    <main className="bg-[#FCFCFB] text-[#1A1A1A] min-h-screen">
-      {/* Page Header */}
-      <section className="bg-[#111111] text-white px-6 py-16 md:py-24 text-center">
-        <nav aria-label="Breadcrumb" className="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-4">
-          <Link to="/" className="hover:text-[#D4AF37] transition-colors">Home</Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-300">Necklaces</span>
-        </nav>
-        <p className="text-[10px] uppercase font-semibold tracking-[0.35em] text-[#D4AF37] mb-2">
-          The Necklace Collection
-        </p>
-        <h1 className="text-3xl md:text-4xl font-serif font-light tracking-[0.2em] uppercase">
-          Necklaces
-        </h1>
-        <div className="w-10 h-px bg-[#D4AF37] mx-auto mt-4 mb-5" />
-        <p className="text-sm text-gray-400 max-w-xl mx-auto leading-relaxed font-serif">
-          Pendants, chains and pearl strands designed to be layered, gifted and worn for a lifetime.
-        </p>
-      </section>
+    <div>
+      {/* 2 Columns on Mobile, 2 on SM, 4 on LG */}
+      <div className={gridClassName || "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10"}>
+        {products.map((product) => (
+          <div
+            key={product._id}
+            onClick={() => navigate(`/product/${product.slug || product._id}`)}
+            className="group cursor-pointer flex flex-col bg-white w-full"
+          >
+            {/* Aspect Ratio Box */}
+            <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#F5F5F3]">
+              {product.badge && (
+                <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
+                  {product.badge}
+                </span>
+              )}
 
-      {/* Outer Padding Adjusted for 2-column Mobile Spacing */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-10 md:py-14">
-        {/* Sort Bar */}
-        <div className="flex items-center justify-between gap-4 mb-8 sm:mb-10 pb-6 border-b border-[#EAE6DF]">
-          <p className="text-xs text-gray-500 tracking-wide">
-            {loading ? 'Loading…' : `${pagination.total} ${pagination.total === 1 ? 'piece' : 'pieces'}`}
-          </p>
-          <label className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-gray-500">
-            Sort
-            <select
-              value={sort}
-              onChange={(e) => changeSort(e.target.value)}
-              className="border border-[#EAE6DF] bg-white px-3 py-2 text-base md:text-xs normal-case tracking-normal text-[#1A1A1A] focus:outline-none focus:border-[#D4AF37]"
-            >
-              {SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleWishlist(product._id);
+                }}
+                className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
+                aria-label="Save to Wishlist"
+              >
+                <Heart
+                  size={13}
+                  className={
+                    wishlist[product._id]
+                      ? 'fill-red-500 text-red-500'
+                      : 'text-gray-500 hover:text-[#111111]'
+                  }
+                />
+              </button>
 
-        {/* Product Grid Section with 2-Column Mobile Grid Class */}
-        <ProductGridSection
-          loading={loading}
-          error={error}
-          reload={reload}
-          products={products}
-          pagination={pagination}
-          page={page}
-          setPage={setPage}
-          wishlist={wishlist}
-          toggleWishlist={toggleWishlist}
-          quickAdd={quickAdd}
-          resourceLabel="piece"
-          emptyLabel="No necklaces available right now."
-          gridClassName="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10"
-        />
+              {product.images?.[0] ? (
+                <img
+                  src={product.images[0].url}
+                  alt={product.images[0].alt || product.name}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-400">
+                  No Image
+                </div>
+              )}
+            </div>
+
+            {/* Info */}
+            <div className="pt-2.5 sm:pt-3.5 flex flex-col justify-start">
+              <h3 className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
+                {product.name}
+              </h3>
+              <div className="mt-1 flex items-center gap-2 text-[11px] sm:text-[12px]">
+                <span className="font-semibold text-[#111111]">
+                  {formatPrice(product.price)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </main>
+    </div>
   );
 }
