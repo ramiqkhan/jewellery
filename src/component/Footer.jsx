@@ -148,7 +148,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-2.5">
                 <Mail size={14} className="text-[#D4AF37]" />
-                <span>info@zelora.com</span>
+                <span>info.zeloraofficials@gmail.com</span>
               </li>
               {/* <li className="flex items-start space-x-2.5">
                 <MapPin size={14} className="text-[#D4AF37] mt-0.5" />
