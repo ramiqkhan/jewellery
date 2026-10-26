@@ -1,103 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, ArrowUpRight } from 'lucide-react';
+import { Heart, ArrowUpRight, AlertCircle, Loader2 } from 'lucide-react';
+import { getProducts } from '../../api';
+import { formatPrice, getPricing } from '../../utils/pricing';
 
-const GENDER_PRODUCTS = [
-  // Men's Collection
-  {
-    id: 101,
-    gender: 'men',
-    name: 'Zelora Royal Oak Skeleton Automatic',
-    originalPrice: 'Rs 890,000',
-    price: 'Rs 850,000',
-    discount: '-4%',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 102,
-    gender: 'men',
-    name: '18K Cuban Link Solid Gold Chain',
-    originalPrice: 'Rs 420,000',
-    price: 'Rs 385,000',
-    discount: '-8%',
-    image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 103,
-    gender: 'men',
-    name: 'Cosmograph Onyx Chronograph Gold',
-    originalPrice: 'Rs 650,000',
-    price: 'Rs 620,000',
-    discount: '-5%',
-    image: 'https://images.unsplash.com/photo-1547996160-01ff74742fd0?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 104,
-    gender: 'men',
-    name: 'Black Diamond Signet Ring 18K',
-    originalPrice: 'Rs 195,000',
-    price: 'Rs 175,000',
-    discount: '-10%',
-    image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&q=80&w=800',
-  },
-
-  // Women's Collection
-  {
-    id: 201,
-    gender: 'women',
-    name: 'Classic Diamond Tennis Bracelet',
-    originalPrice: 'Rs 380,000',
-    price: 'Rs 340,000',
-    discount: '-10%',
-    image: 'https://images.unsplash.com/photo-1611591471171-a1314efea44d?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 202,
-    gender: 'women',
-    name: '18K Gold Solitaire Diamond Ring',
-    originalPrice: 'Rs 210,000',
-    price: 'Rs 185,000',
-    discount: '-12%',
-    image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 203,
-    gender: 'women',
-    name: 'Emerald Cut Diamond Pendant',
-    originalPrice: 'Rs 290,000',
-    price: 'Rs 260,000',
-    discount: '-10%',
-    image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800',
-  },
-  {
-    id: 204,
-    gender: 'women',
-    name: 'Rose Gold Petite Diamond Bangle',
-    originalPrice: 'Rs 310,000',
-    price: 'Rs 275,000',
-    discount: '-11%',
-    image: 'https://images.unsplash.com/photo-1547996160-01ff74742fd0?auto=format&fit=crop&q=80&w=800',
-  },
+const GENDERS = [
+  { value: 'men', label: "Men's" },
+  { value: 'women', label: "Women's" },
 ];
 
-export default function GenderProductDisplay() {
+// GET /api/products?gender=men|women - the backend also folds "unisex" pieces
+// into both, so this isn't a strict men-only/women-only split.
+export default function GenderCollections() {
   const navigate = useNavigate();
   const [activeGender, setActiveGender] = useState('men');
   const [wishlist, setWishlist] = useState({});
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const load = () => {
+    setLoading(true);
+    setError('');
+    getProducts({ gender: activeGender, sort: 'newest', limit: 4 })
+      .then((res) => setProducts(res.products || []))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(load, [activeGender]);
 
   const toggleWishlist = (id, e) => {
     e.stopPropagation();
     setWishlist((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const filteredProducts = GENDER_PRODUCTS.filter(
-    (item) => item.gender === activeGender
-  );
+  const goToProduct = (product) => navigate(`/product/${product.slug || product._id}`);
 
   return (
     <section className="bg-white py-12 md:py-24 px-4 sm:px-6 md:px-12 text-[#111111] antialiased">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header & Gender Switcher */}
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 md:mb-10 pb-6 border-b border-[#EAE6DF] gap-4">
           <div>
@@ -111,94 +55,122 @@ export default function GenderProductDisplay() {
 
           {/* Switcher */}
           <div className="flex items-center gap-2 border border-[#EAE6DF] p-1 bg-[#FAF9F6] w-full sm:w-auto">
-            <button
-              onClick={() => setActiveGender('men')}
-              className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
-                activeGender === 'men'
-                  ? 'bg-[#111111] text-white shadow-xs'
-                  : 'text-gray-500 hover:text-[#111111]'
-              }`}
-            >
-              Men's
-            </button>
-            <button
-              onClick={() => setActiveGender('women')}
-              className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
-                activeGender === 'women'
-                  ? 'bg-[#111111] text-white shadow-xs'
-                  : 'text-gray-500 hover:text-[#111111]'
-              }`}
-            >
-              Women's
-            </button>
+            {GENDERS.map(({ value, label }) => (
+              <button
+                key={value}
+                onClick={() => setActiveGender(value)}
+                className={`flex-1 sm:flex-initial px-6 py-2 text-[10px] uppercase tracking-[0.25em] font-semibold transition-all duration-300 cursor-pointer ${
+                  activeGender === value
+                    ? 'bg-[#111111] text-white shadow-xs'
+                    : 'text-gray-500 hover:text-[#111111]'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
+        {/* Error */}
+        {error && (
+          <div className="flex items-center gap-3 border border-red-200 bg-red-50 text-red-700 p-4 text-xs mb-10">
+            <AlertCircle size={16} className="shrink-0" />
+            <span className="flex-1">Could not load products from the backend: {error}</span>
+            <button onClick={load} className="shrink-0 border border-red-300 px-3 py-1.5 hover:bg-red-100 transition-colors">
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <div className="py-16 flex items-center justify-center text-gray-400">
+            <Loader2 size={22} className="animate-spin" />
+          </div>
+        )}
+
+        {!loading && !error && products.length === 0 && (
+          <p className="py-16 text-center text-sm text-gray-400">
+            No {activeGender === 'men' ? "men's" : "women's"} pieces available right now.
+          </p>
+        )}
+
         {/* 2-Column Mobile Grid Layout */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              onClick={() => navigate(`/product/${product.id}`)}
-              className="group cursor-pointer flex flex-col bg-white"
-            >
-              {/* Image Frame */}
-              <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F3]">
-                {product.discount && (
-                  <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
-                    {product.discount}
-                  </span>
-                )}
-
-                <button
-                  onClick={(e) => toggleWishlist(product.id, e)}
-                  className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
-                  aria-label="Save to Wishlist"
+        {!loading && products.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
+            {products.map((product) => {
+              const pricing = getPricing(product);
+              return (
+                <div
+                  key={product._id}
+                  onClick={() => goToProduct(product)}
+                  className="group cursor-pointer flex flex-col bg-white"
                 >
-                  <Heart
-                    size={13}
-                    className={
-                      wishlist[product.id]
-                        ? 'fill-red-500 text-red-500'
-                        : 'text-gray-500 hover:text-[#111111]'
-                    }
-                  />
-                </button>
-
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                />
-              </div>
-
-              {/* Minimal Product Details */}
-              <div className="pt-2.5 sm:pt-3.5 flex flex-col justify-start">
-                <h3 className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
-                  {product.name}
-                </h3>
-                
-                <div className="mt-1 flex items-center justify-between text-[11px] sm:text-[12px]">
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2">
-                    {product.originalPrice && (
-                      <span className="text-gray-400 line-through font-light text-[10px] sm:text-[11px]">
-                        {product.originalPrice}
+                  {/* Image Frame */}
+                  <div className="relative aspect-[3/4] overflow-hidden bg-[#F5F5F3]">
+                    {(pricing.onSale || product.badge) && (
+                      <span className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-[#111111] text-white text-[8px] sm:text-[9px] font-semibold tracking-wider px-1.5 sm:px-2 py-0.5 z-10">
+                        {pricing.onSale ? `-${pricing.percent}%` : product.badge}
                       </span>
                     )}
-                    <span className="font-semibold text-[#111111]">
-                      {product.price}
-                    </span>
+
+                    <button
+                      onClick={(e) => toggleWishlist(product._id, e)}
+                      className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 p-1.5 sm:p-2 bg-white/90 backdrop-blur-md rounded-full text-[#111111] hover:bg-white z-10 transition-colors cursor-pointer shadow-xs"
+                      aria-label="Save to Wishlist"
+                    >
+                      <Heart
+                        size={13}
+                        className={
+                          wishlist[product._id]
+                            ? 'fill-red-500 text-red-500'
+                            : 'text-gray-500 hover:text-[#111111]'
+                        }
+                      />
+                    </button>
+
+                    {product.images?.[0] ? (
+                      <img
+                        src={product.images[0].url}
+                        alt={product.images[0].alt || product.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[10px] uppercase tracking-widest text-gray-400">
+                        No Image
+                      </div>
+                    )}
                   </div>
 
-                  <span className="hidden sm:flex text-[9px] uppercase tracking-[0.15em] text-gray-400 group-hover:text-[#D4AF37] transition-colors items-center gap-0.5">
-                    View <ArrowUpRight size={11} />
-                  </span>
+                  {/* Minimal Product Details */}
+                  <div className="pt-2.5 sm:pt-3.5 flex flex-col justify-start">
+                    <h3 className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#111111] uppercase line-clamp-1 group-hover:text-[#D4AF37] transition-colors">
+                      {product.name}
+                    </h3>
+
+                    <div className="mt-1 flex items-center justify-between text-[11px] sm:text-[12px]">
+                      <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                        {pricing.onSale && (
+                          <span className="text-gray-400 line-through font-light text-[10px] sm:text-[11px]">
+                            {formatPrice(pricing.originalPrice)}
+                          </span>
+                        )}
+                        <span className="font-semibold text-[#111111]">
+                          {formatPrice(pricing.finalPrice)}
+                        </span>
+                      </div>
+
+                      <span className="hidden sm:flex text-[9px] uppercase tracking-[0.15em] text-gray-400 group-hover:text-[#D4AF37] transition-colors items-center gap-0.5">
+                        View <ArrowUpRight size={11} />
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
       </div>
     </section>

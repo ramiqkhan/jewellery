@@ -15,8 +15,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
 import { getProduct } from '../api';
-
-const formatPrice = (value) => `PKR ${Number(value || 0).toLocaleString()}`;
+import { formatPrice, getPricing } from '../utils/pricing';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -55,6 +54,7 @@ export default function ProductDetail() {
     ? product.sizes.find((s) => s.label === selectedSize)?.stock ?? 0
     : product?.stock ?? 0;
   const outOfStock = hasSizes ? product?.sizes?.every((s) => s.stock <= 0) : product?.stock <= 0;
+  const { onSale, originalPrice, finalPrice, percent } = getPricing(product);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -63,7 +63,8 @@ export default function ProductDetail() {
       id: hasSizes ? `${product._id}-${selectedSize}` : product._id,
       productId: product._id,
       title: product.name,
-      price: product.price,
+      // The discounted price if one is running right now, not the pre-sale price
+      price: finalPrice,
       image: product.images?.[0]?.url || '',
       size: hasSizes ? selectedSize : '',
       quantity,
@@ -145,9 +146,9 @@ export default function ProductDetail() {
                 No Image
               </div>
             )}
-            {product.badge && (
-              <span className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1">
-                {product.badge}
+            {(onSale || product.badge) && (
+              <span className="absolute top-4 left-4 bg-black text-[#D4AF37] text-[10px] uppercase font-bold tracking-widest px-3 py-1">
+                {onSale ? `-${percent}% OFF` : product.badge}
               </span>
             )}
           </div>
@@ -165,12 +166,20 @@ export default function ProductDetail() {
             <p className="text-xs font-mono text-gray-400 mt-1">SKU: {product.sku}</p>
           </div>
 
-          <div className="flex items-baseline space-x-3 border-b border-gray-100 pb-6">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-gray-100 pb-6">
+            {onSale && (
+              <span className="text-base text-gray-400 line-through font-light">{formatPrice(originalPrice)}</span>
+            )}
             <span className="text-2xl font-serif text-black font-semibold">
-              {formatPrice(product.price)}
+              {formatPrice(finalPrice)}
             </span>
+            {onSale && (
+              <span className="text-xs font-semibold text-[#9A7B1F] bg-[#FFFBF0] border border-[#D4AF37]/40 px-2 py-0.5 uppercase tracking-wider">
+                Save {percent}%
+              </span>
+            )}
             {product.priceNote && (
-              <span className="text-xs text-gray-500 font-light">{product.priceNote}</span>
+              <span className="text-xs text-gray-500 font-light w-full">{product.priceNote}</span>
             )}
           </div>
 
