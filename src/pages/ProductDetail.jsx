@@ -283,13 +283,13 @@ export default function ProductDetail() {
               <Truck size={20} className="text-gray-700 mb-1" />
               <span className="text-[10px] font-bold tracking-wider uppercase text-black">Complimentary Express Shipping</span>
             </div>
-            <div className="flex flex-col items-center">
+            {/* <div className="flex flex-col items-center">
               <ShieldCheck size={20} className="text-gray-700 mb-1" />
               <span className="text-[10px] font-bold tracking-wider uppercase text-black">Certified Authenticity Guarantee</span>
-            </div>
+            </div> */}
             <div className="flex flex-col items-center">
               <RotateCcw size={20} className="text-gray-700 mb-1" />
-              <span className="text-[10px] font-bold tracking-wider uppercase text-black">14-Day Bespoke Returns</span>
+              <span className="text-[10px] font-bold tracking-wider uppercase text-black">7-Day Bespoke Returns</span>
             </div>
           </div>
 

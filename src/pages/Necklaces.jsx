@@ -33,9 +33,10 @@ export default function Necklaces() {
         </p>
       </section>
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14">
+      {/* Outer Padding Adjusted for 2-column Mobile Spacing */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-10 md:py-14">
         {/* Sort Bar */}
-        <div className="flex items-center justify-between gap-4 mb-10 pb-6 border-b border-[#EAE6DF]">
+        <div className="flex items-center justify-between gap-4 mb-8 sm:mb-10 pb-6 border-b border-[#EAE6DF]">
           <p className="text-xs text-gray-500 tracking-wide">
             {loading ? 'Loading…' : `${pagination.total} ${pagination.total === 1 ? 'piece' : 'pieces'}`}
           </p>
@@ -44,7 +45,7 @@ export default function Necklaces() {
             <select
               value={sort}
               onChange={(e) => changeSort(e.target.value)}
-              className="border border-[#EAE6DF] bg-white px-3 py-2 text-xs normal-case tracking-normal text-[#1A1A1A] focus:outline-none focus:border-[#D4AF37]"
+              className="border border-[#EAE6DF] bg-white px-3 py-2 text-base md:text-xs normal-case tracking-normal text-[#1A1A1A] focus:outline-none focus:border-[#D4AF37]"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -55,6 +56,7 @@ export default function Necklaces() {
           </label>
         </div>
 
+        {/* Product Grid Section with 2-Column Mobile Grid Class */}
         <ProductGridSection
           loading={loading}
           error={error}
@@ -68,6 +70,7 @@ export default function Necklaces() {
           quickAdd={quickAdd}
           resourceLabel="piece"
           emptyLabel="No necklaces available right now."
+          gridClassName="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10"
         />
       </div>
     </main>
