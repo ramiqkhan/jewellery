@@ -24,7 +24,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  const shippingFee = totalPrice > 50000 ? 0 : 1500;
+  const shippingFee = totalPrice > 50000 ? 0 : 299;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
@@ -333,7 +333,7 @@ export default function Checkout() {
 
                 <div className="mt-6 border-t border-[#EAE6DF] pt-4 flex items-center justify-center gap-2 text-gray-400 text-[10px] uppercase tracking-wider">
                   <ShieldCheck size={14} className="text-[#D4AF37]" />
-                  <span>Insured Express Delivery</span>
+                  <span> Express Delivery</span>
                 </div>
               </div>
             </div>
