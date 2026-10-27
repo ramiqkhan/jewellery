@@ -126,9 +126,9 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
                 onQuickAdd(product);
               }}
               aria-label={quickBuyLabel}
-              className="sm:hidden absolute bottom-2 right-2 z-20 w-9 h-9 rounded-full bg-[#1A1A1A] text-white flex items-center justify-center shadow-md active:scale-90 transition-transform"
+              className="sm:hidden absolute bottom-2 right-2 z-20 w-8 h-8 rounded-full bg-[#1A1A1A] text-white border border-white/70 flex items-center justify-center shadow-md active:scale-90 transition-transform"
             >
-              <ShoppingBag size={15} />
+              <ShoppingBag size={13} />
             </button>
           )}
 
@@ -152,11 +152,13 @@ export default function ProductCard({ product, isWishlisted, onToggleWishlist, o
           </h2>
 
           <p className="text-[8px] uppercase tracking-[0.2em] text-gray-400 mt-3 mb-0.5">Price</p>
-          <div className="flex items-baseline gap-2">
+          <div className="flex flex-nowrap items-baseline gap-1.5">
             {onSale && (
-              <span className="text-xs text-gray-400 line-through">{formatPrice(originalPrice)}</span>
+              <span className="text-[11px] whitespace-nowrap text-gray-400 line-through">
+                {formatPrice(originalPrice)}
+              </span>
             )}
-            <span className="text-base font-semibold text-[#1A1A1A] tracking-wide">
+            <span className="text-sm whitespace-nowrap font-semibold text-[#1A1A1A] tracking-wide">
               {formatPrice(finalPrice)}
             </span>
           </div>

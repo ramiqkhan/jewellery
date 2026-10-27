@@ -287,7 +287,7 @@ export default function ProductDetail() {
           )}
 
           {/* Guarantees & Shipping Specs */}
-          <div className="grid grid-cols-3 gap-2 border-t border-gray-100 pt-6 text-center">
+          <div className="grid grid-cols-2 gap-2 border-t border-gray-100 pt-6 text-center">
             <div className="flex flex-col items-center">
               <Truck size={20} className="text-gray-700 mb-1" />
               <span className="text-[10px] font-bold tracking-wider uppercase text-black">Complimentary Express Shipping</span>

@@ -39,7 +39,7 @@ export default function ProductGridSection({
 
       {/* Loading Skeletons: 2 Columns on Mobile */}
       {loading && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-8 gap-y-6 sm:gap-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-8 gap-y-6 sm:gap-y-12">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-col animate-pulse">
               <div className="aspect-square bg-[#F0EEE9] border border-[#EAE6DF] mb-4" />
@@ -59,7 +59,7 @@ export default function ProductGridSection({
 
       {/* Active Products: 2 Columns on Mobile */}
       {!loading && products.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-8 gap-y-6 sm:gap-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-8 gap-y-6 sm:gap-y-12">
           {products.map((product) => (
             <ProductCard
               key={product._id}

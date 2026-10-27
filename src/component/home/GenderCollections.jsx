@@ -107,7 +107,7 @@ export default function GenderCollections() {
 
         {/* 2-Column Mobile Grid Layout */}
         {!loading && products.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-6 gap-y-6 sm:gap-y-10">
             {products.map((product) => {
               const pricing = getPricing(product);
               return (
