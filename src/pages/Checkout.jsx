@@ -24,7 +24,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  // Free shipping if order total is PKR 3,499 or above, otherwise PKR 299
+  // 🎯 Free shipping agar order PKR 3,499 ya usse upar ho, warna PKR 299 shipping charges
   const shippingFee = totalPrice >= 3499 ? 0 : 299;
   const finalTotal = totalPrice + shippingFee;
 
@@ -322,7 +322,11 @@ export default function Checkout() {
                   <div className="flex justify-between text-gray-500">
                     <span>Shipping</span>
                     <span className="font-mono text-black">
-                      {shippingFee === 0 ? 'FREE' : `PKR ${shippingFee.toLocaleString()}`}
+                      {shippingFee === 0 ? (
+                        <span className="text-green-700 font-semibold">FREE</span>
+                      ) : (
+                        `PKR ${shippingFee.toLocaleString()}`
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold text-sm border-t border-[#EAE6DF] pt-3 mt-3 text-[#1A1A1A]">
