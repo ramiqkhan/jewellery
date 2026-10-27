@@ -24,7 +24,8 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  const shippingFee = totalPrice > 50000 ? 0 : 299;
+  // Free shipping if order total is PKR 3,499 or above, otherwise PKR 299
+  const shippingFee = totalPrice >= 3499 ? 0 : 299;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
@@ -56,7 +57,6 @@ export default function Checkout() {
           size: item.size || item.variant || '',
           quantity: item.quantity,
         })),
-        // Backend expects "bank-transfer", the radio button below still says "bank"
         paymentMethod: formData.paymentMethod === 'bank' ? 'bank-transfer' : 'cod',
       });
 
