@@ -82,7 +82,7 @@ export default function Navbar() {
       {/* Announcement Bar */}
       <div className="bg-black py-2 px-4 text-center">
         <p className="text-white text-xs tracking-widest font-medium">
-          Free delivery on orders above PKR 2999+ • USE CODE: LUXURY10
+          Free delivery on orders above PKR 3499+
         </p>
       </div>
 

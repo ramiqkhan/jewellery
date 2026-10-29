@@ -28,7 +28,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  const shippingFee = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+  const shippingFee = totalPrice > 50000 ? 0 : 1500;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
@@ -60,7 +60,6 @@ export default function Checkout() {
           size: item.size || item.variant || '',
           quantity: item.quantity,
         })),
-        // Backend expects "bank-transfer", the radio button below still says "bank"
         paymentMethod: formData.paymentMethod === 'bank' ? 'bank-transfer' : 'cod',
       });
 
@@ -326,7 +325,11 @@ export default function Checkout() {
                   <div className="flex justify-between text-gray-500">
                     <span>Shipping</span>
                     <span className="font-mono text-black">
-                      {shippingFee === 0 ? 'FREE' : `PKR ${shippingFee.toLocaleString()}`}
+                      {shippingFee === 0 ? (
+                        <span className="text-green-700 font-semibold">FREE</span>
+                      ) : (
+                        `PKR ${shippingFee.toLocaleString()}`
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between font-semibold text-sm border-t border-[#EAE6DF] pt-3 mt-3 text-[#1A1A1A]">
@@ -337,7 +340,7 @@ export default function Checkout() {
 
                 <div className="mt-6 border-t border-[#EAE6DF] pt-4 flex items-center justify-center gap-2 text-gray-400 text-[10px] uppercase tracking-wider">
                   <ShieldCheck size={14} className="text-[#D4AF37]" />
-                  <span>Insured Express Delivery</span>
+                  <span> Express Delivery</span>
                 </div>
               </div>
             </div>
