@@ -20,6 +20,7 @@ export default function Checkout() {
     city: '',
     postalCode: '',
     phone: '',
+    alternativePhone: '',
     paymentMethod: 'cod',
   });
 
@@ -48,6 +49,7 @@ export default function Checkout() {
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
           phone: formData.phone,
+          alternativePhone: formData.alternativePhone.trim(),
         },
         shippingAddress: {
           line1: formData.address,
@@ -229,6 +231,19 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         className="w-full border border-[#EAE6DF] bg-white p-3 text-base sm:text-xs focus:outline-none focus:border-[#D4AF37]"
                         placeholder="+92 300 0000000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase tracking-wider text-gray-500 mb-1">
+                        Alternative Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="alternativePhone"
+                        value={formData.alternativePhone}
+                        onChange={handleInputChange}
+                        className="w-full border border-[#EAE6DF] bg-white p-3 text-base sm:text-xs focus:outline-none focus:border-[#D4AF37]"
+                        placeholder="Optional, in case we can't reach you"
                       />
                     </div>
                   </div>
