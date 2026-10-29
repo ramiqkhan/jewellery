@@ -4,6 +4,10 @@ import { Lock, ArrowLeft, CheckCircle2, ShieldCheck, AlertCircle, Loader2 } from
 import { useCart } from '../Context/CartContext';
 import { createOrder } from '../api';
 
+// Free shipping at/above this subtotal; otherwise a flat fee applies
+const FREE_SHIPPING_THRESHOLD = 3500;
+const SHIPPING_FEE = 299;
+
 export default function Checkout() {
   const navigate = useNavigate();
   const { cart, totalPrice, clearCart } = useCart();
@@ -24,7 +28,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  const shippingFee = totalPrice > 50000 ? 0 : 1500;
+  const shippingFee = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
