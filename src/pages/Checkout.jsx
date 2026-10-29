@@ -28,7 +28,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  const shippingFee = totalPrice > 50000 ? 0 : 1500;
+  const shippingFee = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
