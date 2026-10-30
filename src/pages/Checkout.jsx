@@ -4,6 +4,10 @@ import { Lock, ArrowLeft, CheckCircle2, ShieldCheck, AlertCircle, Loader2 } from
 import { useCart } from '../Context/CartContext';
 import { createOrder } from '../api';
 
+// Free shipping at/above this subtotal; otherwise a flat fee applies
+const FREE_SHIPPING_THRESHOLD = 3500;
+const SHIPPING_FEE = 299;
+
 export default function Checkout() {
   const navigate = useNavigate();
   const { cart, totalPrice, clearCart } = useCart();
@@ -16,6 +20,7 @@ export default function Checkout() {
     city: '',
     postalCode: '',
     phone: '',
+    alternativePhone: '',
     paymentMethod: 'cod',
   });
 
@@ -24,8 +29,7 @@ export default function Checkout() {
   const [orderError, setOrderError] = useState('');
   const [placedOrder, setPlacedOrder] = useState(null);
 
-  // 🎯 Free shipping agar order PKR 3,499 ya usse upar ho, warna PKR 299 shipping charges
-  const shippingFee = totalPrice >= 3499 ? 0 : 299;
+  const shippingFee = totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const finalTotal = totalPrice + shippingFee;
 
   const handleInputChange = (e) => {
@@ -45,6 +49,7 @@ export default function Checkout() {
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
           phone: formData.phone,
+          alternativePhone: formData.alternativePhone.trim(),
         },
         shippingAddress: {
           line1: formData.address,
@@ -226,6 +231,19 @@ export default function Checkout() {
                         onChange={handleInputChange}
                         className="w-full border border-[#EAE6DF] bg-white p-3 text-base sm:text-xs focus:outline-none focus:border-[#D4AF37]"
                         placeholder="+92 300 0000000"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase tracking-wider text-gray-500 mb-1">
+                        Alternative Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="alternativePhone"
+                        value={formData.alternativePhone}
+                        onChange={handleInputChange}
+                        className="w-full border border-[#EAE6DF] bg-white p-3 text-base sm:text-xs focus:outline-none focus:border-[#D4AF37]"
+                        placeholder="Optional, in case we can't reach you"
                       />
                     </div>
                   </div>
