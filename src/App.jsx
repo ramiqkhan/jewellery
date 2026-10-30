@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './component/Navbar';
 import CartDrawer from './component/CartDrawer';
 import Footer from './component/Footer';
+import WhatsAppButton from './component/WhatsAppButton';
 
 import Home from './pages/home';
 import Rings from './pages/Rings';
@@ -79,6 +80,7 @@ export default function App() {
           </Routes>
 
           <Footer />
+          <WhatsAppButton />
         </div>
       </Router>
     </CartProvider>
