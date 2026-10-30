@@ -16,6 +16,7 @@ const NAV_ITEMS = [
   { label: 'FINE JEWELLERY', to: '/fine-jewellery', hasDropdown: true, highlight: true },
   { label: 'MEN / WOMEN', to: '/#gender-collections', isHash: true, hasDropdown: false },
   { label: 'WATCHES', to: '/watches', hasDropdown: false },
+  { label: 'DEALS & SALE', to: '/deals', hasDropdown: false, highlight: true },
 ];
 
 export default function Navbar() {
