@@ -118,3 +118,11 @@ export const updateProduct = (id, formData) => sendForm('PATCH', `/products/${id
 
 // DELETE /api/products/:id
 export const deleteProduct = (id) => deleteJson(`/products/${id}`);
+
+// --- Deals (see backend: routes/dealRoutes.js, controllers/dealController.js) ---
+
+// GET /api/deals  -> { deals: [{ title, subtitle, badge, banner, percent, endsAt, products: [...] }] } (live only)
+export const getDeals = () => getJson('/deals');
+
+// GET /api/deals/:idOrSlug
+export const getDeal = (idOrSlug) => getJson(`/deals/${encodeURIComponent(idOrSlug)}`);

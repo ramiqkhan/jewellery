@@ -15,6 +15,7 @@ import Earrings from './pages/Earrings';
 import Bracelets from './pages/Bracelets';
 import FineJewellery from './pages/FineJewellery';
 import Deals from './pages/Deals'; // Deals Page Import
+import DealDetail from './pages/DealDetail'; // Single Deal Page Import
 import Eighties from './pages/Eighties';
 import Watches from './pages/Watches';
 import ProductDetail from './pages/ProductDetail';
@@ -72,7 +73,8 @@ export default function App() {
             {/* Dynamic Product Page Route */}
             <Route path="/product/:id" element={<ProductDetail />} />
             {/* Deals Page Route */}
-            <Route path="/deals" element={<Deals />} /> 
+            <Route path="/deals" element={<Deals />} />
+            <Route path="/deals/:slug" element={<DealDetail />} />
 
             {/* Checkout Route */}
             <Route path="/checkout" element={<Checkout />} />
