@@ -4,6 +4,7 @@ import { Heart, ShoppingBag, Eye, X, Check, Watch, Sparkles, AlertCircle, Loader
 import { getProducts } from '../../api';
 import { useQuickAdd } from '../../hooks/useQuickAdd';
 import { formatPrice, getPricing } from '../../utils/pricing';
+import { shuffle } from '../../utils/shuffle';
 
 export default function BestSellers() {
   const navigate = useNavigate();
@@ -21,8 +22,9 @@ export default function BestSellers() {
   const load = () => {
     setLoading(true);
     setError('');
-    getProducts({ sort: 'newest', limit: 20 })
-      .then((res) => setProducts(res.products || []))
+    // Shuffle a wide pool (the backend max) so every category tab gets a real mix, not just the newest pieces
+    getProducts({ sort: 'newest', limit: 100 })
+      .then((res) => setProducts(shuffle(res.products)))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   };

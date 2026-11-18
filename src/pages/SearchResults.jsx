@@ -6,7 +6,11 @@ import { SORT_OPTIONS } from '../hooks/useProductList';
 import { useQuickAdd } from '../hooks/useQuickAdd';
 import ProductGridSection from '../component/ProductGridSection';
 
-const SEARCH_SORT_OPTIONS = [{ value: '', label: 'Most Relevant' }, ...SORT_OPTIONS];
+// 'mixed' only exists for collection pages; search sorts on the backend
+const SEARCH_SORT_OPTIONS = [
+  { value: '', label: 'Most Relevant' },
+  ...SORT_OPTIONS.filter((option) => option.value !== 'mixed'),
+];
 
 const EMPTY_FACETS = { categories: [], collections: [], priceRange: null };
 const EMPTY_PAGINATION = { total: 0, page: 1, limit: 12, pages: 1 };

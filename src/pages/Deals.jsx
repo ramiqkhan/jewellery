@@ -5,6 +5,7 @@ import { getDeals, getProducts } from '../api';
 import { useQuickAdd } from '../hooks/useQuickAdd';
 import { getPricing } from '../utils/pricing';
 import { useNow } from '../utils/dealTime';
+import { shuffle } from '../utils/shuffle';
 import DealCard from '../component/DealCard';
 import ProductGridSection from '../component/ProductGridSection';
 
@@ -28,7 +29,7 @@ export default function Deals() {
         const inDeals = new Set(liveDeals.flatMap((deal) => deal.products.map((product) => product._id)));
         setDeals(liveDeals);
         setOtherOffers(
-          (saleRes.products || []).filter((product) => !inDeals.has(product._id) && getPricing(product).onSale)
+          shuffle((saleRes.products || []).filter((product) => !inDeals.has(product._id) && getPricing(product).onSale))
         );
       })
       .catch((err) => setError(err.message))

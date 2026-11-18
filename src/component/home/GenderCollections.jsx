@@ -3,6 +3,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Heart, ArrowUpRight, AlertCircle, Loader2 } from 'lucide-react';
 import { getProducts } from '../../api';
 import { formatPrice, getPricing } from '../../utils/pricing';
+import { shuffle } from '../../utils/shuffle';
+
+const SHOWN = 4;
 
 const GENDERS = [
   { value: 'men', label: "Men's" },
@@ -25,8 +28,9 @@ export default function GenderCollections() {
   const load = () => {
     setLoading(true);
     setError('');
-    getProducts({ gender: activeGender, sort: 'newest', limit: 4 })
-      .then((res) => setProducts(res.products || []))
+    // Pick from a wide pool (the backend max) so it's a real mix, not a reshuffle of the newest 4
+    getProducts({ gender: activeGender, sort: 'newest', limit: 100 })
+      .then((res) => setProducts(shuffle(res.products).slice(0, SHOWN)))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   };

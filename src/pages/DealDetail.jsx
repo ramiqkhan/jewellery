@@ -5,6 +5,7 @@ import { getDeal, getProduct } from '../api';
 import { dealBundle, useBuyDeal } from '../hooks/useBuyDeal';
 import { formatPrice } from '../utils/pricing';
 import { timeLeft, useNow } from '../utils/dealTime';
+import { shuffle } from '../utils/shuffle';
 import DealProductDetail from '../component/DealProductDetail';
 
 export default function DealDetail() {
@@ -24,7 +25,7 @@ export default function DealDetail() {
     getDeal(slug)
       .then(async (res) => {
         const products = await Promise.all(
-          res.deal.products.map((product) =>
+          shuffle(res.deal.products).map((product) =>
             getProduct(product.slug || product._id)
               .then((full) => ({ ...product, ...full.product }))
               .catch(() => product)
